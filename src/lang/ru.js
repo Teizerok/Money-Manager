@@ -38,6 +38,7 @@ export default {
 	"enter-description": "Введите описание",
 	"create": "Создать",
 	"name": "Название",
+	"name-user": "Ваше имя",
 	"enter-category-name": "Введите название категории",
 	"limit": "Лимит",
 	"edit": "Редактировать",

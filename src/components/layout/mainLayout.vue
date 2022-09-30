@@ -8,12 +8,13 @@
       />
 
       <sidebarElement
+        @change-category="isOpenSidebar = false"
         :isOpen="isOpenSidebar"
         :translate="translate"
         :language="language"
       />
 
-      <main class="app-content" :class="{ full: !isOpenSidebar }">
+      <main class="app-content full">
         <div class="app-page">
           <router-view
             @change-language="(value) => $emit('changeLanguage', value)"
@@ -65,7 +66,7 @@ export default {
 
   data() {
     return {
-      isOpenSidebar: true,
+      isOpenSidebar: false,
     };
   },
 
@@ -96,3 +97,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+@media (max-width: 500px) {
+  .fixed-action-btn {
+    display: none;
+  }
+}
+</style>

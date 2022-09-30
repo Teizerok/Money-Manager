@@ -53,4 +53,5 @@ export default {
 	"repeat-password": "Repeat password",
 	"agree": "I agree with the rules",
 	"have-account": "Already have an account?",
+	"name-user": "Your name",
 }

@@ -125,3 +125,22 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+@media (max-width: 700px) {
+  .page-title {
+    align-items: start;
+    display: flex;
+    flex-direction: column;
+  }
+
+  h3 {
+    font-size: 26px;
+    margin: 0 0 10px 0;
+  }
+  h4 {
+    font-size: 22px;
+  }
+}
+</style>
+

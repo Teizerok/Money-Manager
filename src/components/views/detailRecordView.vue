@@ -5,7 +5,7 @@
     <div v-else-if="record">
       <div class="breadcrumb-wrap">
         <router-link to="/history" class="breadcrumb">
-          {{ translate("history") }}
+          <p>{{ translate("history") }}</p>
         </router-link>
 
         <a @click.prevent class="breadcrumb">
@@ -134,3 +134,25 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+@media (max-width: 500px) {
+  .breadcrumb-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+  }
+  .breadcrumb-wrap p {
+    font-size: 20px;
+  }
+  .breadcrumb-wrap a {
+    font-size: 20px;
+  }
+  p {
+    font-size: 17px;
+  }
+  small {
+    font-size: 11px;
+  }
+}
+</style>

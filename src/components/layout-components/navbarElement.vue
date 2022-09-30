@@ -11,7 +11,7 @@
         </span>
       </div>
 
-      <ul class="right hide-on-small-and-down">
+      <ul class="right dropdown-container">
         <li>
           <a
             class="dropdown-trigger black-text"
@@ -56,7 +56,7 @@ export default {
       required: true,
       default: "ru",
     },
-	
+
     translate: {
       type: Function,
       required: true,
@@ -114,3 +114,6 @@ export default {
   },
 };
 </script>
+
+
+

@@ -56,7 +56,7 @@
         </button>
       </div>
 
-      <p class="center">
+      <p class="center helper-text-account">
         {{ translate("do-not-have-account") }}
 
         <router-link to="/register">
@@ -175,3 +175,40 @@ export default {
 };
 </script>
 
+<style scoped>
+@media (max-width: 700px) {
+  .card {
+    width: 400px;
+  }
+  .card-title {
+    font-size: 26px;
+  }
+
+  label {
+    font-size: 16px;
+  }
+
+  .card-content {
+    padding-bottom: 0;
+  }
+
+  .helper-text {
+    font-size: 14px;
+  }
+  .btn {
+    font-size: 16px;
+  }
+  .helper-text-account {
+    font-size: 16px;
+  }
+  .switch switch {
+    font-size: 39px;
+  }
+}
+
+@media (max-width: 450px) {
+  .card {
+    width: 250px;
+  }
+}
+</style>

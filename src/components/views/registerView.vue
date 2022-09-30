@@ -75,7 +75,7 @@
           class="validate"
         />
         <label for="name">
-          {{ translate("name") }}
+          {{ translate("name-user") }}
         </label>
 
         <small v-if="nameErrored" class="helper-text invalid">
@@ -224,3 +224,41 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+@media (max-width: 700px) {
+  .card {
+    width: 400px;
+  }
+  .card-title {
+    font-size: 26px;
+  }
+
+  label {
+    font-size: 16px;
+  }
+
+  .card-content {
+    padding-bottom: 0;
+  }
+
+  .helper-text {
+    font-size: 14px;
+  }
+  .btn {
+    font-size: 16px;
+  }
+  .helper-text-account {
+    font-size: 16px;
+  }
+  .switch switch {
+    font-size: 39px;
+  }
+}
+
+@media (max-width: 450px) {
+  .card {
+    width: 250px;
+  }
+}
+</style>

@@ -2,10 +2,10 @@
   <table>
     <thead>
       <tr>
-        <th>#</th>
-        <th>{{ translate("sum") }}</th>
-        <th>{{ translate("date") }}</th>
-        <th>{{ translate("category") }}</th>
+        <th class="count-record">#</th>
+        <th class="sum-record">{{ translate("sum") }}</th>
+        <th class="date-record">{{ translate("date") }}</th>
+        <th class="category-record">{{ translate("category") }}</th>
         <th>{{ translate("type") }}</th>
         <th>{{ translate("open") }}</th>
         <th>{{ translate("delete") }}</th>
@@ -17,10 +17,10 @@
         v-for="({ amount, date, categoryName, ...record }, index) in records"
         :key="index"
       >
-        <td>{{ index + 1 }}</td>
-        <td>{{ formateCurrency(amount) }}</td>
-        <td>{{ formateDate(date) }}</td>
-        <td>{{ categoryName }}</td>
+        <td class="count-record">{{ index + 1 }}</td>
+        <td class="sum-record">{{ formateCurrency(amount) }}</td>
+        <td class="date-record">{{ formateDate(date) }}</td>
+        <td class="category-record">{{ categoryName }}</td>
 
         <td>
           <span
@@ -39,7 +39,7 @@
             @click="$router.push('/detail/' + record.key)"
             class="btn-small btn"
           >
-            <i class="material-icons">open_in_new</i>
+            <i class="tiny material-icons">open_in_new</i>
           </button>
         </td>
 
@@ -52,7 +52,7 @@
             "
             class="btn-small btn red"
           >
-            <i class="material-icons">delete</i>
+            <i class="tiny material-icons">delete</i>
           </button>
         </td>
       </tr>
@@ -121,3 +121,23 @@ export default {
   },
 };
 </script>
+
+
+<style scoped>
+@media (max-width: 700px) {
+  .date-record,
+  .count-record {
+    display: none;
+  }
+}
+@media (max-width: 500px) {
+  .category-record {
+    display: none;
+  }
+}
+@media (max-width: 310px) {
+  .sum-record {
+    display: none;
+  }
+}
+</style>

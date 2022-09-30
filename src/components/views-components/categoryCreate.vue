@@ -141,3 +141,22 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+@media (max-width: 600px) {
+  .col {
+    margin: 0 0 80px 0;
+  }
+
+  label {
+    font-size: 18px;
+  }
+
+  .helper-text {
+    font-size: 14px;
+  }
+  .btn {
+    font-size: 18px;
+  }
+}
+</style>

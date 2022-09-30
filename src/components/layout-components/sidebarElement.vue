@@ -8,7 +8,7 @@
       active-class="active"
       custom
     >
-      <li :class="[isExactActive && 'active']">
+      <li @click="$emit('changeCategory')" :class="[isExactActive && 'active']">
         <a
           @click="navigate"
           :href="href"
@@ -45,6 +45,10 @@ export default {
     },
   },
 
+  emits: {
+    changeCategory: null,
+  },
+
   data() {
     return {
       links: [
@@ -58,3 +62,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+@media (max-width: 600px) {
+  .sidenav {
+    width: 100%;
+  }
+}
+</style>

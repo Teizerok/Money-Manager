@@ -224,3 +224,19 @@ export default {
   },
 };
 </script>
+
+
+<style scoped>
+@media (max-width: 700px) {
+  label {
+    font-size: 16px;
+  }
+
+  .helper-text {
+    font-size: 14px;
+  }
+  .btn {
+    font-size: 18px;
+  }
+}
+</style>

@@ -189,3 +189,19 @@ export default {
   },
 };
 </script>
+
+
+<style scoped>
+@media (max-width: 600px) {
+  label {
+    font-size: 18px;
+  }
+
+  .helper-text {
+    font-size: 14px;
+  }
+  .btn {
+    font-size: 18px;
+  }
+}
+</style>

@@ -129,3 +129,26 @@ export default {
   margin: 0 0 20px 0;
 }
 </style>
+
+
+
+<style scoped>
+@media (max-width: 700px) {
+  label {
+    font-size: 16px;
+  }
+
+  .helper-text {
+    font-size: 14px;
+  }
+  .btn {
+    font-size: 18px;
+  }
+  .helper-text-account {
+    font-size: 18px;
+  }
+  .switch switch {
+    font-size: 39px;
+  }
+}
+</style>
