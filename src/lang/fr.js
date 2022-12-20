@@ -60,5 +60,6 @@ export default {
 	"ukrainien": "Ukrainien",
 	"franch": "Français",
 	"warning-text": "Lors de la suppression d'une catégorie, tous les enregistrements précédemment entrés dans celle-ci seront complètement supprimés. Es-tu sûr?",
-	"warning-title": "Avertissement"
+	"warning-title": "Avertissement",
+	"cancel": "Annuler"
 }

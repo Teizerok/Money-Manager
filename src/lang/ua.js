@@ -60,5 +60,6 @@ export default {
 	"ukrainien": "Українська",
 	"franch": "Французька",
 	"warning-text": "При видаленні категорії всі раніше записані до неї записи будуть повністю видалені. Ви впевнені?",
-	"warning-title": "Warning"
+	"warning-title": "Warning",
+	"cancel": "Cкасувати"
 }

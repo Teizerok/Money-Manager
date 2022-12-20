@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isOpen" :class="{ open: isOpen }" class="popup">
+  <div v-show="isOpen" :class="{ open: isOpen }" class="popup">
     <div @click.stop="onCancel" class="popup__layout">
       <div @click.stop class="popup__content">
         <h2 class="popup_title">{{ t("warning-title") }}</h2>
@@ -11,9 +11,9 @@
         <div class="buttons">
           <button
             @click.prevent="onCancel"
-            class="btn waves-effect blue cancel-button"
+            class="btn waves-effect cancel-button"
           >
-            <span class="update-text">{{ t("update") }}</span>
+            <span class="update-text">{{ t("cancel") }}</span>
             <i class="material-icons right">cancel</i>
           </button>
           <button
@@ -82,11 +82,14 @@ export default {
   height: 100vh;
   overflow: hidden;
   opacity: 0;
-  transition: opacity 600ms ease-out;
+  visibility: hidden;
+  transition: all 600ms ease-out;
 }
 
-.open {
+.popup.open {
   opacity: 1;
+  visibility: visible;
+  transition: all 600ms ease-out;
 }
 
 .popup__layout {
@@ -112,6 +115,13 @@ export default {
   flex-direction: column;
   align-items: center;
   padding: 20px;
+  top: -200px;
+  transition: all 600ms ease-out;
+}
+
+.popup.open .popup__content {
+  transition: all 600ms ease-out;
+  top: 0;
 }
 
 .popup_title {
@@ -132,6 +142,7 @@ export default {
 
 .cancel-button {
   border-radius: 6px;
+  background: #504ef3;
 }
 
 .delete-button {

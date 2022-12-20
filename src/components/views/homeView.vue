@@ -77,8 +77,8 @@ export default {
 
 .refresh i {
   position: relative;
-  top: 1px;
-  left: -1px;
+  top: 3px;
+  left: -2px;
 }
 
 .refresh:hover {

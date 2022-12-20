@@ -133,6 +133,12 @@ export default {
   padding: 0 0 0 50px;
 }
 
+@media (max-width: 290px) {
+  .date {
+    padding: 0 0 0 40px;
+  }
+}
+
 .nav-container .hamburger-lines {
   display: block;
   height: 26px;
