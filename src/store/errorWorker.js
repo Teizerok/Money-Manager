@@ -4,12 +4,14 @@ export default {
 			commit('setError', message)
 		},
 
+		//преобразование ошибки в строку
 		normalizeError({ }, e) {
 			return JSON.parse(JSON.stringify(e.code))
 		},
 	},
 
 	state: {
+		//если появится какая то ошибка она будет отловлена в layout-ах 
 		error: null,
 	},
 

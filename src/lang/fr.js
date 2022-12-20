@@ -58,7 +58,10 @@ export default {
 	"choice-main-currency": "Sélectionnez la devise principale",
 	"choice-language": "Choisissez la langue",
 	"ukrainien": "Ukrainien",
-	"franch": "Français",
+	"france": "Français",
+	"germany": 'Allemand',
+	"poland": 'Polonais',
+	"italia": 'Italien',
 	"warning-text": "Lors de la suppression d'une catégorie, tous les enregistrements précédemment entrés dans celle-ci seront complètement supprimés. Es-tu sûr?",
 	"warning-title": "Avertissement",
 	"cancel": "Annuler"

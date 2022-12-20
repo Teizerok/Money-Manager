@@ -58,7 +58,10 @@ export default {
 	"choice-main-currency": "Выберите главную валюту",
 	"choice-language": "Выберите язык",
 	"ukrainien": "Украинский",
-	"franch": "Французкий",
+	"france": "Французкий",
+	"germany": 'Немецкий',
+	"poland": 'Польский',
+	"italia": 'Итальянский',
 	"warning-text": "При удалении категории все ранее занесеные в нее записи будут полностью удалены. Вы уверены?",
 	"warning-title": "Warning",
 	"cancel": "Отмена"

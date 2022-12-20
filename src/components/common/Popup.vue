@@ -2,28 +2,9 @@
   <div v-show="isOpen" :class="{ open: isOpen }" class="popup">
     <div @click.stop="onCancel" class="popup__layout">
       <div @click.stop class="popup__content">
-        <h2 class="popup_title">{{ t("warning-title") }}</h2>
-
-        <div class="popup__text">
-          <p>{{ t("warning-text") }}</p>
-        </div>
-
-        <div class="buttons">
-          <button
-            @click.prevent="onCancel"
-            class="btn waves-effect cancel-button"
-          >
-            <span class="update-text">{{ t("cancel") }}</span>
-            <i class="material-icons right">cancel</i>
-          </button>
-          <button
-            @click.prevent="onDelete"
-            class="btn waves-effect red delete-button"
-          >
-            <span class="update-text">{{ t("delete") }}</span>
-            <i class="material-icons right">delete</i>
-          </button>
-        </div>
+        <slot name="header"> </slot>
+        <slot name="content"> </slot>
+        <slot name="footer" :onDelete="onTrue" :onCancel="onFalse"> </slot>
       </div>
     </div>
   </div>
@@ -34,8 +15,6 @@ export default {
   data: () => ({
     isOpen: false,
   }),
-
-  inject: ["t"],
 
   popupontroller: {},
 
@@ -59,14 +38,16 @@ export default {
       this.$store.commit("closePopup");
     },
 
-    onCancel() {
+    onFalse() {
       this.close();
       this.$options.popupontroller.resolve(false);
+      //onCancel
     },
 
-    onDelete() {
+    onTrue() {
       this.close();
       this.$options.popupontroller.resolve(true);
+      //onDelete
     },
   },
 };
@@ -122,73 +103,5 @@ export default {
 .popup.open .popup__content {
   transition: all 600ms ease-out;
   top: 0;
-}
-
-.popup_title {
-  margin: 0 0 10px 0;
-  font-size: 40px;
-}
-
-.popup__text {
-  flex: 1 1 auto;
-  width: 50%;
-}
-
-.buttons {
-  display: flex;
-  justify-content: space-between;
-  width: 60%;
-}
-
-.cancel-button {
-  border-radius: 6px;
-  background: #504ef3;
-}
-
-.delete-button {
-  border-radius: 6px;
-}
-
-@media (max-width: 606px) {
-  .cancel-button span {
-    display: none;
-  }
-  .cancel-button i {
-    position: relative;
-    left: -6px;
-    font-size: 25px;
-  }
-
-  .delete-button span {
-    display: none;
-  }
-
-  .delete-button i {
-    position: relative;
-    left: -6px;
-    font-size: 25px;
-  }
-
-  .popup_title {
-    font-size: 30px;
-  }
-}
-
-@media (max-width: 340px) {
-  .cancel-button {
-    width: 60px;
-  }
-
-  .delete-button {
-    width: 60px;
-  }
-
-  .cancel-button i {
-    left: 0px;
-  }
-
-  .delete-button i {
-    left: 0px;
-  }
 }
 </style>

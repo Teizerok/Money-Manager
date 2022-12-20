@@ -1,13 +1,7 @@
 <template>
   <div id="app">
     <pre-loader v-if="loading" />
-    <component
-      v-else
-      @change-language="changeLanguage"
-      :is="layout"
-      :translate="translate"
-      :language="language"
-    >
+    <component v-else :is="layout" :translate="translate">
       <router-view />
     </component>
   </div>
@@ -19,6 +13,7 @@ import mainLayout from "./components/layout/mainLayout.vue";
 import emptyLayout from "./components/layout/emptyLayout.vue";
 import preLoader from "./components/views/preLoader.vue";
 import lang from "./lang/translate.js";
+import messages from "@/utilits/messages.js";
 
 export default {
   name: "app",
@@ -32,7 +27,6 @@ export default {
   data() {
     return {
       loading: true,
-      language: "en",
     };
   },
 
@@ -43,24 +37,41 @@ export default {
   },
 
   computed: {
+    //выбор layout-а
     layout() {
       return this.$route.meta.layout || "empty-layout";
+    },
+    //отслеживание ошибок
+    error() {
+      return this.$store.getters.getError;
     },
   },
 
   methods: {
+    //функция перевода по ключам, функция получает ключ фразы и по выбраному языку из стейта возращаеет ее содержимое
     translate(prase) {
       const currentLanguage = this.$store.getters.getLanguage;
+
       if (lang[currentLanguage]) {
         return lang[currentLanguage][prase];
       }
     },
+  },
 
-    changeLanguage(language) {
-      this.language = language;
+  watch: {
+    //при ошибке будет запущен watcher который выведен подсказку пользоателю о том что, что то пошло не так
+    error() {
+      const message = this.$store.getters.getError;
+      const currentLanguage = this.$store.getters.getLanguage;
+
+      if (messages[currentLanguage][message]) {
+        M.toast({ html: messages[currentLanguage][message] });
+      }
+      this.$store.commit("clearError");
     },
   },
 
+  //получение данных о пользователе, подписка на обновление бд, подсчет счета всех записей
   async created() {
     try {
       await this.$store.dispatch("loadInfo");
@@ -68,7 +79,6 @@ export default {
       await this.$store.dispatch("computeBill");
       this.language = this.$store.getters.info.language;
     } catch (e) {
-      this.language = "ru";
     } finally {
       this.loading = false;
     }

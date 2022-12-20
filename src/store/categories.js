@@ -2,6 +2,8 @@ import { getDatabase, ref, push, get, update, set } from "firebase/database";
 
 export default {
 	actions: {
+		//создание новой категории, функция получает объект настроеной категории с полями:  title, limit. 
+
 		async createCategory({ commit, dispatch }, { title, limit }) {
 			try {
 				const database = getDatabase();
@@ -15,6 +17,8 @@ export default {
 			}
 		},
 
+
+		//получение всех категорий
 		async getCategories({ commit, dispatch }) {
 			try {
 				const database = getDatabase();
@@ -24,6 +28,7 @@ export default {
 
 				if (!categories) return {}
 
+				//добавление индефикатора в категорию по которой последняя хранится бд
 				const formatedCategories = Object.keys(categories).map(key => ({ ...categories[key], key }))
 				return formatedCategories
 			} catch (e) {
@@ -33,6 +38,7 @@ export default {
 			}
 		},
 
+		//получение конкретной категории по индефикатору
 		async getCategoryByKey({ commit, dispatch }, key) {
 			try {
 				const database = getDatabase();
@@ -48,7 +54,7 @@ export default {
 			}
 		},
 
-
+		//обновление конкретной категории, возможность поменять имя и лимит
 		async updateCategories({ commit, dispatch }, { title, limit, key, }) {
 			try {
 				const database = getDatabase();
@@ -61,7 +67,9 @@ export default {
 				throw e
 			}
 		},
-		async deleteCategories({ commit, dispatch }, keyCategory) {
+
+		//удаление конкретной категории по индефикатору и всех записей записаных в нее
+		async deleteCategoryByKey({ commit, dispatch }, keyCategory) {
 			try {
 				const database = getDatabase();
 				const uid = await dispatch('getUId')
@@ -69,6 +77,8 @@ export default {
 				const records = await dispatch('getRecords')
 				await set(ref(database, `users/${uid}/categories/${keyCategory}`), null)
 
+
+				//поиск записей записаных в удаляемую категорию с дальнейшим удалением
 				records.forEach(async (record) => {
 					if (record.category === keyCategory) {
 						await dispatch('deleteRecord', { key: record.key })

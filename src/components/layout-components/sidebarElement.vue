@@ -54,6 +54,7 @@ export default {
 
   data() {
     return {
+      //вкладки для sidebar-а
       links: [
         { categoryName: "bill", url: "/", img: bill },
         { categoryName: "history", url: "/history", img: history },

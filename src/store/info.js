@@ -3,6 +3,8 @@ import { loadRatesFor } from '../api'
 
 export default {
 	actions: {
+
+		//обновление информаии о пользователе через профильб для обновления прокидывается объект с обновленными полями
 		async updateInfo({ dispatch, getters, commit }, toUpdate) {
 			try {
 				const database = getDatabase();
@@ -18,6 +20,7 @@ export default {
 			}
 		},
 
+		//загрузка данных о пользователе через бд
 		async loadInfo({ dispatch, commit }) {
 			try {
 				const database = getDatabase()
@@ -40,6 +43,7 @@ export default {
 			}
 		},
 
+		//подписка на обновление полей базы данных, при обновлении последней будет обновлен профиль в стейте
 		async subscribeToUpdateInfo({ dispatch, commit }) {
 			try {
 				const database = getDatabase()
@@ -64,13 +68,14 @@ export default {
 			}
 		},
 
-
+		//подсчет всех трат и пополнений из записей и конвертация в конкретную валюту 
 		async computeBill({ dispatch, commit, getters }) {
 			try {
 				const database = getDatabase()
 				const uid = await dispatch('getUId')
 
 				let records = await (await get(ref(database, `users/${uid}/records/`))).val()
+				//получения актуальных курсов к заданой валюте
 				const rates = await loadRatesFor(getters.info.currentCurrency)
 
 				if (!records) return 0

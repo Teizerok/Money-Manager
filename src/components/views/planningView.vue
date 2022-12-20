@@ -69,6 +69,8 @@ export default {
     formatedCurrency() {
       const currentCurrency = this.$store.getters.info.currentCurrency;
 
+      if (!currentCurrency) return;
+
       const currentBill = new Intl.NumberFormat("en-EN", {
         style: "currency",
         currency: currentCurrency,

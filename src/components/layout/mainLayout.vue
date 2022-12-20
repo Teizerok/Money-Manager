@@ -16,8 +16,6 @@
         <div class="app-page">
           <router-view
             @change-language="(value) => $emit('changeLanguage', value)"
-            :translate="translate"
-            :language="language"
           ></router-view>
         </div>
       </main>
@@ -34,12 +32,9 @@
 <script>
 import navbarElement from "@/components/layout-components/navbarElement.vue";
 import sidebarElement from "@/components/layout-components/sidebarElement.vue";
-import messages from "@/utilits/messages.js";
 
 export default {
   name: "mainLayout",
-
-  inject: ["translate"],
 
   components: {
     navbarElement,
@@ -50,30 +45,6 @@ export default {
     return {
       isOpenSidebar: false,
     };
-  },
-
-  computed: {
-    error() {
-      return this.$store.getters.getError;
-    },
-
-    info() {
-      return this.$store.getters.info;
-    },
-  },
-
-  watch: {
-    error() {
-      const message = this.$store.getters.getError;
-
-      console.log(message);
-      const currentLanguage = this.$store.getters.getLanguage;
-
-      if (messages[currentLanguage][message]) {
-        M.toast({ html: messages[currentLanguage][message] });
-      }
-      this.$store.commit("clearError");
-    },
   },
 
   async created() {

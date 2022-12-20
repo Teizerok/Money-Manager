@@ -2,6 +2,9 @@ import { getDatabase, ref, push, get, set } from "firebase/database";
 
 export default {
 	actions: {
+		//создание новой записи, функция получает объект настроеной записи с полями:  
+		// category, amount, type, description, date, currency.
+
 		async createRecord({ commit, dispatch }, record) {
 			try {
 				const database = getDatabase();
@@ -15,6 +18,8 @@ export default {
 			}
 		},
 
+
+		//получение всех записей
 		async getRecords({ commit, dispatch }) {
 
 			try {
@@ -25,6 +30,7 @@ export default {
 
 				if (!records) return {}
 
+				//добавление индефикатора в запись по которой последняя хранится  бд
 				const formatedrecords = Object.keys(records).map(key => ({ ...records[key], key }))
 
 				return formatedrecords
@@ -35,6 +41,7 @@ export default {
 			}
 		},
 
+		//получение конкретной записи по индефикатору
 		async getRecordByKey({ commit, dispatch }, key) {
 			try {
 
@@ -51,6 +58,7 @@ export default {
 			}
 		},
 
+		//удаление конкретной записи по индефикатору
 		async deleteRecord({ commit, dispatch }, { key }) {
 			try {
 

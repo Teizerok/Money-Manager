@@ -107,9 +107,7 @@
       <p class="has-account center">
         <span class="already-has-account">{{ t("have-account") }}</span>
         <router-link class="register" to="/login">
-          <span class="blue-text text-darken-1">{{
-            t("sign-in")
-          }}</span>
+          <span class="blue-text text-darken-1">{{ t("sign-in") }}</span>
         </router-link>
       </p>
 
@@ -198,7 +196,8 @@ export default {
         email: this.email,
         password: this.password,
         name: this.name,
-        language: this.language,
+        language: this.isEnglish === true ? "en" : "ru",
+        currentCurrency: "USD",
       };
 
       try {

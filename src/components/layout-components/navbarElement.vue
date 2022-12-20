@@ -1,7 +1,3 @@
-// <a @click.prevent="$emit('open')" href="#">
-  //        <i class="burger material-icons white-text">dehaze</i>
-     //   </a>
-
 <template>
   <nav class="navbar">
     <div class="nav-wrapper">
@@ -93,24 +89,28 @@ export default {
   },
 
   methods: {
+    //выход из сессии
     async logout() {
       await this.$store.dispatch("logout");
       this.$router.push("/login?message=logout");
     },
   },
 
+  //временной интервал
   created() {
     this.dateInterval = setInterval(() => {
       this.date = new Date();
-    }, 1000);
+    }, 60000);
   },
 
+  //dropdown
   mounted() {
     this.dropdown = M.Dropdown.init(this.$refs.dropdown, {
       constrainWidth: false,
     });
   },
 
+  //удаление dropdown-а и временного интервала
   beforeUnmount() {
     clearInterval(this.dateInterval);
 

@@ -75,9 +75,12 @@ import { required } from "@vuelidate/validators";
 import messages from "@/utilits/messages.js";
 
 import english from "../../assets/images/english.png";
-import franch from "../../assets/images/franch.png";
+import france from "../../assets/images/france.png";
 import russian from "../../assets/images/russian.png";
 import ukraine from "../../assets/images/ukraine.png";
+import italia from "../../assets/images/italia.png";
+import germany from "../../assets/images/germany.png";
+import poland from "../../assets/images/poland.png";
 
 export default {
   name: "profile",
@@ -100,7 +103,10 @@ export default {
         { lang: "en", title: "english", img: english },
         { lang: "ua", title: "ukrainien", img: ukraine },
         { lang: "ru", title: "russian", img: russian },
-        { lang: "fr", title: "franch", img: franch },
+        { lang: "fr", title: "france", img: france },
+        { lang: "pl", title: "poland", img: poland },
+        { lang: "ge", title: "germany", img: germany },
+        { lang: "it", title: "italia", img: italia },
       ],
 
       currentCurrency: null,

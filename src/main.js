@@ -25,7 +25,6 @@ const analytics = getAnalytics(app);
 let started = false
 
 getAuth()
-
 	.onAuthStateChanged(() => {
 
 		if (!started) {

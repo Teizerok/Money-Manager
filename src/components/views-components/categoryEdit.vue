@@ -81,21 +81,21 @@
     </div>
   </div>
 
-  <Popup ref="popup" />
+  <CategoryDeletePopup ref="popup" />
 </template>
 
 <script>
 import useVuelidate from "@vuelidate/core";
 import messages from "@/utilits/messages.js";
 import { required, minValue } from "@vuelidate/validators";
-import Popup from "../common/Popup.vue";
+import CategoryDeletePopup from "./CategoryDeletePopup.vue";
 export default {
   name: "categoryEdit",
 
   inject: ["t"],
 
   components: {
-    Popup,
+    CategoryDeletePopup,
   },
 
   props: {
@@ -172,7 +172,7 @@ export default {
       if (!isDelete) return;
 
       try {
-        this.$store.dispatch("deleteCategories", this.currentCategory);
+        this.$store.dispatch("deleteCategoryByKey", this.currentCategory);
 
         const currentLanguage = this.$store.getters.getLanguage;
 

@@ -58,7 +58,10 @@ export default {
 	"choice-main-currency": "Select main currency",
 	"choice-language": "Choose language",
 	"ukrainien": "Ukrainian",
-	"franch": "French",
+	"france": "French",
+	"germany": 'German',
+	"poland": 'Polish',
+	"italia": 'Italian',
 	"warning-text": "When deleting a category, all records previously entered into it will be completely deleted. Are you sure?",
 	"warning-title": "Warning",
 	"cancel": "Cancel"
