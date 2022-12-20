@@ -1,8 +1,8 @@
 <template>
-  <form @submit.prevent="submitHandler" class="card auth-card">
+  <form v-if="!loading" @submit.prevent="submitHandler" class="card auth-card">
     <div class="card-content">
       <span class="card-title">
-        {{ translate("home-bookkeeping") }}
+        {{ t("home-bookkeeping") }}
       </span>
 
       <div class="input-field">
@@ -16,11 +16,11 @@
           class="validate"
         />
         <label for="email">
-          {{ translate("email") }}
+          {{ t("email") }}
         </label>
 
         <small v-if="emailErrored" class="helper-text invalid">
-          {{ translate("enter-your-email") }}
+          {{ t("enter-your-email") }}
         </small>
       </div>
 
@@ -35,13 +35,13 @@
           class="validate"
         />
         <label for="password">
-          {{ translate("password") }}
+          {{ t("password") }}
         </label>
 
         <small v-if="passwordErrored" class="helper-text invalid">
-          {{ translate("enter-password") }}
+          {{ t("enter-password") }}
           {{ minLength }}
-          {{ translate("characters") }}
+          {{ t("characters") }}
         </small>
       </div>
 
@@ -56,11 +56,11 @@
           class="validate"
         />
         <label for="repeat-password">
-          {{ translate("repeat-password") }}
+          {{ t("repeat-password") }}
         </label>
 
         <small v-if="errorRepeated" class="helper-text invalid">
-          {{ translate("repeat-password") }}
+          {{ t("repeat-password") }}
         </small>
       </div>
 
@@ -75,55 +75,62 @@
           class="validate"
         />
         <label for="name">
-          {{ translate("name-user") }}
+          {{ t("name-user") }}
         </label>
 
         <small v-if="nameErrored" class="helper-text invalid">
-          {{ translate("enter-name") }}
+          {{ t("enter-name") }}
         </small>
       </div>
 
       <p>
         <label>
-          <input v-model="agree" type="checkbox" />
-          <span>
-            {{ translate("agree") }}
+          <input v-model="agree" class="checkbox" type="checkbox" />
+          <span class="rulles">
+            {{ t("agree") }}
           </span>
         </label>
       </p>
     </div>
 
-    <div class="card-action">
+    <div class="card-action grey lighten-5">
       <div>
-        <button class="btn waves-effect waves-light auth-submit" type="submit">
-          {{ translate("register") }}
+        <button
+          class="btn waves-effect blue lighten-1 auth-submit"
+          type="submit"
+        >
+          {{ t("register") }}
           <i class="material-icons right">send</i>
         </button>
       </div>
 
-      <p class="center">
-        {{ translate("have-account") }}
-        <router-link to="/login">
-          {{ translate("sign-in") }}
+      <p class="has-account center">
+        <span class="already-has-account">{{ t("have-account") }}</span>
+        <router-link class="register" to="/login">
+          <span class="blue-text text-darken-1">{{
+            t("sign-in")
+          }}</span>
         </router-link>
       </p>
 
       <div class="switch center">
         <label>
-          {{ translate("english") }}
-          <input v-model="isRussian" type="checkbox" />
+          {{ t("russian") }}
+          <input v-model="isEnglish" type="checkbox" />
           <span class="lever"></span>
-          {{ translate("russian") }}
+          {{ t("english") }}
         </label>
       </div>
     </div>
   </form>
+  <pre-loader v-else />
 </template>
 
 
 <script>
 import useVuelidate from "@vuelidate/core";
 import { required, email, minLength } from "@vuelidate/validators";
+import preLoader from "./preLoader.vue";
 
 export default {
   name: "login",
@@ -132,23 +139,11 @@ export default {
     return { v$: useVuelidate() };
   },
 
-  props: {
-    language: {
-      type: String,
-      required: true,
-      default: "ru",
-    },
-
-    translate: {
-      type: Function,
-      required: true,
-      default: () => {},
-    },
+  components: {
+    preLoader,
   },
 
-  emits: {
-    changeLanguage: null,
-  },
+  inject: ["t"],
 
   data() {
     return {
@@ -157,7 +152,8 @@ export default {
       repeatPassword: "",
       name: "",
       agree: false,
-      isRussian: true,
+      isEnglish: true,
+      loading: false,
     };
   },
 
@@ -206,6 +202,7 @@ export default {
       };
 
       try {
+        this.loading = true;
         await this.$store.dispatch("register", formSend);
         this.$router.push("/");
       } catch (e) {}
@@ -213,19 +210,60 @@ export default {
   },
 
   watch: {
-    isRussian() {
-      const currentLanguage = this.isRussian === true ? "ru" : "en";
-      this.$emit("changeLanguage", currentLanguage);
+    isEnglish() {
+      const currentLanguage = this.isEnglish === true ? "en" : "ru";
+      this.$store.commit("setLanguage", currentLanguage);
+    },
+
+    loading() {
+      this.$nextTick().then(() => {
+        M.updateTextFields();
+      });
     },
   },
 
   created() {
-    this.isRussian = this.language === "ru" ? true : false;
+    this.isEnglish = this.$store.getters.getLanguage === "en" ? true : false;
   },
 };
 </script>
 
 <style scoped>
+.input-field input[type="text"]:focus + label,
+.input-field input[type="number"]:focus + label,
+.input-field input[type="password"]:focus + label,
+.materialize-textarea:focus:not([readonly]) + label {
+  color: #42a5f5 !important;
+}
+
+.input-field input[type="text"]:focus,
+.input-field input[type="number"]:focus,
+.input-field input[type="password"]:focus,
+.materialize-textarea:focus:not([readonly]) {
+  border-bottom: 1px solid #42a5f5 !important;
+  box-shadow: 0 1px 0 0 #42a5f5 !important;
+}
+
+.input-field input[type="checkbox"]:checked + span:not(.lever):after {
+  border: 2px solid #42a5f5;
+  background-color: #42a5f5;
+}
+
+[type="checkbox"].filled-in:checked + span:not(.lever):after {
+  background-color: #42a5f5;
+}
+
+.switch label input[type="checkbox"]:checked + .lever:after {
+  background-color: #0091ea;
+}
+
+.switch label input[type="checkbox"]:checked + .lever {
+  background-color: #bbdefb;
+}
+
+.already-has-account {
+  margin: 0 5px 0 0;
+}
 @media (max-width: 700px) {
   .card {
     width: 400px;
@@ -251,14 +289,69 @@ export default {
   .helper-text-account {
     font-size: 16px;
   }
-  .switch switch {
-    font-size: 39px;
+
+  .rulles {
+    margin: 0 0 10px 0;
   }
 }
 
 @media (max-width: 450px) {
   .card {
+    width: 350px;
+  }
+  .send-button {
+    margin: 10px 0 5px;
+  }
+  .has-account {
+    margin-bottom: 10px;
+  }
+  .switch {
+    margin: 5px 0;
+  }
+}
+
+@media (max-width: 370px) {
+  .card {
     width: 250px;
   }
+  .switch label {
+    font-size: 13px;
+  }
+  .has-account label {
+    font-size: 14px;
+  }
+  .already-has-account {
+    display: block;
+  }
+}
+
+@media (max-height: 655px) {
+  .card-title {
+    font-size: 20px;
+    margin: 0;
+  }
+
+  .input-field {
+    margin: 5px 0;
+    height: 70px;
+  }
+  .switch label {
+    margin: 0;
+  }
+  .has-account {
+    margin: 10px 0 5px;
+  }
+
+  .helper-text {
+    font-size: 12px;
+  }
+}
+
+.card {
+  border-radius: 15px;
+  overflow: hidden;
+}
+.auth-submit {
+  border-radius: 6px;
 }
 </style>

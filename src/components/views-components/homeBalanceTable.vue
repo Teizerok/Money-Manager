@@ -1,14 +1,19 @@
 <template>
   <div class="col s12 m6 l4">
-    <div class="card light-blue bill-card">
+    <div class="card bill-card">
       <div class="card-content white-text">
         <span class="card-title">
-          {{ translate("currency-account") }}
+          {{ t("currency-account") }}
         </span>
-
-        <p class="currency-line" v-for="currency in currencies" :key="currency">
-          {{ formateCurrency(currency) }}
-        </p>
+        <table>
+          <tbody>
+            <tr v-for="currency in currencies" :key="currency">
+              <td>
+                {{ formateCurrency(currency) }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -18,23 +23,13 @@
 export default {
   name: "balanceTable",
 
+  inject: ["t"],
+
   props: {
     rates: {
       type: Object,
       required: true,
       default: {},
-    },
-
-    language: {
-      type: String,
-      required: true,
-      default: "ru",
-    },
-
-    translate: {
-      type: Function,
-      required: true,
-      default: () => {},
     },
   },
 
@@ -44,17 +39,13 @@ export default {
     };
   },
 
-  computed: {
-    basedCurrency() {
-      return (
-        this.$store.getters.info.bill / (this.rates["UAH"] / this.rates["USD"])
-      );
-    },
-  },
-
   methods: {
     getCurrency(currency) {
-      return Math.floor(this.basedCurrency * this.rates[currency]);
+      return Math.floor(
+        this.$store.getters.info.bill /
+          (this.rates[this.$store.getters.info.currentCurrency] /
+            this.rates[currency])
+      );
     },
 
     formateCurrency(currency) {
@@ -68,3 +59,14 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.card {
+  box-shadow: 1px 1px 10px 2px rgba(0, 0, 0, 0.2);
+  background: rgba(25, 24, 79, 0.7);
+  border-radius: 8px;
+}
+tbody {
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+}
+</style>

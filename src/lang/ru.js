@@ -54,4 +54,9 @@ export default {
 	"repeat-password": "Повторите пароль",
 	"agree": "С правилами согласен",
 	"have-account": "Уже есть аккаунт?",
+	"choice-currency": "Выберите валюту",
+	"choice-main-currency": "Выберите главную валюту",
+	"choice-language": "Выберите язык",
+	"ukrainien": "Украинский",
+	"franch": "Французкий",
 }

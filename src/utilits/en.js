@@ -8,4 +8,6 @@ export default {
 	'category-updated': 'Category has been updated',
 	'dont-have-money-record': 'Not enough funds on the balance',
 	'record-completed': 'Entry added',
+	'profile-updatated': 'profile updated successfully',
+	'category-deleted': 'Category has been removed'
 }

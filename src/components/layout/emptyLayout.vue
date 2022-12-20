@@ -1,10 +1,6 @@
 <template>
-  <div class="grey darken-1 empty-layout">
-    <router-view
-      @change-language="(value) => $emit('changeLanguage', value)"
-      :translate="translate"
-      :language="language"
-    ></router-view>
+  <div class="layout grey lighten-1 empty-layout">
+    <router-view></router-view>
   </div>
 </template>
 
@@ -14,34 +10,9 @@ import messages from "@/utilits/messages.js";
 export default {
   name: "emptyLayout",
 
-  props: {
-    language: {
-      type: String,
-      required: true,
-      default: "ru",
-    },
-
-    translate: {
-      type: Function,
-      required: true,
-      default: () => {},
-    },
-  },
-
-  emits: {
-    changeLanguage: null,
-  },
-
   data() {
     return {
       language: "ru",
-    };
-  },
-
-  provide() {
-    return {
-      setLanguage: this.setLanguage,
-      getLanguage: this.getLanguage,
     };
   },
 
@@ -51,20 +22,10 @@ export default {
     },
   },
 
-  methods: {
-    setLanguage(current) {
-      this.language = current;
-    },
-
-    getLanguage() {
-      return this.language;
-    },
-  },
-
   watch: {
     error() {
       const message = this.$store.getters.getError;
-      const lang = this.language;
+      const lang = this.$store.getters.getLanguage;
 
       if (messages[lang][message]) {
         M.toast({ html: messages[lang][message] });
@@ -74,3 +35,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+@media (max-height: 655px) {
+  .layout {
+    padding: 30px 0 0 0;
+  }
+}
+</style>

@@ -2,29 +2,26 @@
   <div>
     <div class="page-title">
       <h3>
-        {{ translate("categories") }}
+        {{ t("categories") }}
       </h3>
     </div>
 
     <pre-loader v-if="loading" />
 
     <section v-else>
-      <div class="row">
-        <category-create
-          @updated="loadCategories"
-          :translate="translate"
-          :language="language"
-        />
+      <div class="columns">
+        <div class="create">
+          <category-create @updated="loadCategories" />
+        </div>
+        <div v-if="categories.length" class="edit">
+          <category-edit
+            @updated="loadCategories"
+            @deleted="loadCategories"
+            :categories="categories"
+          />
+        </div>
 
-        <category-edit
-          v-if="categories.length"
-          @updated="loadCategories"
-          :categories="categories"
-          :translate="translate"
-          :language="language"
-        />
-
-        <p v-else>{{ translate("no-categories") }}</p>
+        <p v-else>{{ t("no-categories") }}</p>
       </div>
     </section>
   </div>
@@ -44,19 +41,7 @@ export default {
     preLoader,
   },
 
-  props: {
-    language: {
-      type: String,
-      required: true,
-      default: "ru",
-    },
-
-    translate: {
-      type: Function,
-      required: true,
-      default: () => {},
-    },
-  },
+  inject: ["t"],
 
   data() {
     return {
@@ -80,3 +65,22 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.columns {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.create {
+  margin: 0px 0 100px 0;
+}
+
+@media (max-width: 600px) {
+  .create {
+    margin: 0px 0 0px 0;
+  }
+}
+</style>

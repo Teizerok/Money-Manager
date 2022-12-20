@@ -2,42 +2,56 @@
   <table>
     <thead>
       <tr>
-        <th class="count-record">#</th>
-        <th class="sum-record">{{ translate("sum") }}</th>
-        <th class="date-record">{{ translate("date") }}</th>
-        <th class="category-record">{{ translate("category") }}</th>
-        <th>{{ translate("type") }}</th>
-        <th>{{ translate("open") }}</th>
-        <th>{{ translate("delete") }}</th>
+        <th class="count-record grey-text text-darken-1">#</th>
+        <th class="sum-record grey-text text-darken-4">
+          {{ t("sum") }}
+        </th>
+        <th class="date-record grey-text text-darken-4">
+          {{ t("date") }}
+        </th>
+        <th class="category-record grey-text text-darken-4">
+          {{ t("category") }}
+        </th>
+        <th class="category-type">{{ t("type") }}</th>
+        <th>{{ t("open") }}</th>
+        <th>{{ t("delete") }}</th>
       </tr>
     </thead>
 
     <tbody>
       <tr
-        v-for="({ amount, date, categoryName, ...record }, index) in records"
+        v-for="(
+          { amount, date, categoryName, currency, ...record }, index
+        ) in records"
         :key="index"
       >
-        <td class="count-record">{{ index + 1 }}</td>
-        <td class="sum-record">{{ formateCurrency(amount) }}</td>
-        <td class="date-record">{{ formateDate(date) }}</td>
-        <td class="category-record">{{ categoryName }}</td>
+        <td class="count-record grey-text text-lighten-1">{{ index + 1 }}</td>
+        <td class="sum-record grey-text text-darken-1">
+          {{ formateCurrency(amount, currency) }}
+        </td>
+        <td class="date-record grey-text text-darken-1">
+          {{ formateDate(date) }}
+        </td>
+        <td class="category-record grey-text text-darken-1">
+          {{ categoryName }}
+        </td>
 
-        <td>
+        <td class="category-type">
           <span
             :class="{
-              green: !record.spendedClass,
-              red: record.spendedClass,
+              'green-icon': !record.spendedClass,
+              'red-icon': record.spendedClass,
             }"
             class="white-text badge"
           >
-            {{ translate(record.typeText) }}
+            {{ t(record.typeText) }}
           </span>
         </td>
 
         <td>
           <button
             @click="$router.push('/detail/' + record.key)"
-            class="btn-small btn"
+            class="detail btn-small btn waves-effect"
           >
             <i class="tiny material-icons">open_in_new</i>
           </button>
@@ -50,7 +64,7 @@
                 key: record.key,
               })
             "
-            class="btn-small btn red"
+            class="delete-record btn-small btn waves-effect"
           >
             <i class="tiny material-icons">delete</i>
           </button>
@@ -63,24 +77,13 @@
 <script>
 export default {
   name: "historyTable",
+  inject: ["t"],
 
   props: {
     records: {
       type: Array,
       required: true,
       default: [],
-    },
-
-    language: {
-      type: String,
-      required: true,
-      default: "ru",
-    },
-
-    translate: {
-      type: Function,
-      required: true,
-      default: () => {},
     },
   },
 
@@ -90,15 +93,15 @@ export default {
 
   computed: {
     dateLanguaged() {
-      return this.language === "ru" ? "ru-RU" : "en-EN";
+      return this.$store.getters.getLanguage === "ru" ? "ru-RU" : "en-EN";
     },
   },
 
   methods: {
-    formateCurrency(value) {
+    formateCurrency(value, currency = "UAH") {
       const currentBill = new Intl.NumberFormat("en-EN", {
         style: "currency",
-        currency: "UAH",
+        currency,
       }).format(value);
 
       return currentBill;
@@ -124,6 +127,37 @@ export default {
 
 
 <style scoped>
+.green-icon {
+  background: #09b383;
+  border-radius: 6px;
+}
+.red-icon {
+  background: #f32b49;
+  border-radius: 6px;
+}
+.detail {
+  background: #09b383;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+}
+.detail:hover {
+  background: #066b4e;
+}
+
+.detail i {
+  position: relative;
+  left: -9px;
+}
+
+.delete-record {
+  background: #f32b49;
+  border-radius: 10px;
+}
+.delete-record:hover {
+  background: #961e30;
+}
+
 @media (max-width: 700px) {
   .date-record,
   .count-record {
@@ -136,8 +170,12 @@ export default {
   }
 }
 @media (max-width: 310px) {
-  .sum-record {
+  .category-type {
     display: none;
   }
+}
+
+table {
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
 }
 </style>

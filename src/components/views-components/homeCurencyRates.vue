@@ -1,22 +1,22 @@
 <template>
   <div class="col s12 m6 l8">
-    <div class="card orange darken-3 bill-card">
+    <div class="card bill-card">
       <div class="card-content white-text">
         <div class="card-header">
           <span class="card-title">
-            {{ translate("exchange-rates") }}
+            {{ t("exchange-rates") }}
           </span>
         </div>
         <table>
           <thead>
             <tr>
-              <th>
-                {{ translate("currency") }}
-              </th>
-              <th>
-                {{ translate("exchange-rate-to") }}
+              <td>
+                {{ t("currency") }}
+              </td>
+              <td>
+                {{ t("exchange-rate-to") }}
                 {{ baseCurrency }}
-              </th>
+              </td>
             </tr>
           </thead>
 
@@ -38,23 +38,13 @@
 
 <script>
 export default {
+  inject: ["t"],
+
   props: {
     rates: {
       type: Object,
       required: true,
       default: {},
-    },
-
-    language: {
-      type: String,
-      required: true,
-      default: "ru",
-    },
-
-    translate: {
-      type: Function,
-      required: true,
-      default: () => {},
     },
   },
 
@@ -77,3 +67,21 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.card {
+  box-shadow: 1px 1px 10px 2px rgba(0, 0, 0, 0.2);
+  background: rgba(25, 24, 79, 0.7);
+  border-radius: 8px;
+}
+
+@media (max-width: 340px) {
+  .card {
+    height: 350px;
+  }
+}
+
+tbody {
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+}
+</style>

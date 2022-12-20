@@ -1,4 +1,4 @@
-import { getDatabase, ref, push, get, update } from "firebase/database";
+import { getDatabase, ref, push, get, update, set } from "firebase/database";
 
 export default {
 	actions: {
@@ -55,6 +55,18 @@ export default {
 				const uid = await dispatch('getUId')
 
 				await update(ref(database, `users/${uid}/categories/${key}`), { title, limit })
+			} catch (e) {
+				const message = await dispatch('normalizeError', e)
+				commit('setError', message)
+				throw e
+			}
+		},
+		async deleteCategories({ commit, dispatch }, key) {
+			try {
+				const database = getDatabase();
+				const uid = await dispatch('getUId')
+
+				await set(ref(database, `users/${uid}/categories/${key}`), null)
 			} catch (e) {
 				const message = await dispatch('normalizeError', e)
 				commit('setError', message)

@@ -1,20 +1,20 @@
 <template>
-  <nav class="navbar orange lighten-1">
+  <nav class="navbar">
     <div class="nav-wrapper">
       <div class="navbar-left">
-        <a @click.prevent="$emit('click')" href="#">
-          <i class="material-icons black-text">dehaze</i>
+        <a @click.prevent="$emit('open')" href="#">
+          <i class="burger material-icons white-text">dehaze</i>
         </a>
 
-        <span class="black-text">
+        <span class="white-text">
           {{ formatedDate }}
         </span>
       </div>
 
-      <ul class="right dropdown-container">
+      <ul class="right dropdown-container" @click.prevent="$emit('close')">
         <li>
           <a
-            class="dropdown-trigger black-text"
+            class="dropdown-trigger white-text"
             href="#"
             data-target="dropdown"
             ref="dropdown"
@@ -25,18 +25,18 @@
 
           <ul id="dropdown" class="dropdown-content">
             <li>
-              <router-link to="/profile" class="black-text">
+              <router-link to="/profile" class="grey-text text-darken-2">
                 <i class="material-icons">account_circle</i>
-                {{ translate("profile") }}
+                {{ t("profile") }}
               </router-link>
             </li>
 
             <li class="divider" tabindex="-1"></li>
 
             <li>
-              <a @click.prevent="logout" href="#" class="black-text">
+              <a @click.prevent="logout" href="#" class="go-out">
                 <i class="material-icons">assignment_return</i>
-                {{ translate("go-out") }}
+                {{ t("go-out") }}
               </a>
             </li>
           </ul>
@@ -49,24 +49,7 @@
 <script>
 export default {
   name: "nabar",
-
-  props: {
-    language: {
-      type: String,
-      required: true,
-      default: "ru",
-    },
-
-    translate: {
-      type: Function,
-      required: true,
-      default: () => {},
-    },
-  },
-
-  emits: {
-    click: null,
-  },
+  inject: ["t"],
 
   data() {
     return {
@@ -74,6 +57,11 @@ export default {
       dateInterval: null,
       date: new Date(),
     };
+  },
+
+  emits: {
+    open: null,
+    close: null,
   },
 
   computed: {
@@ -115,5 +103,12 @@ export default {
 };
 </script>
 
-
+<style scoped>
+.navbar {
+  background: #504ef3;
+}
+.go-out {
+  color: #f32b49;
+}
+</style>
 

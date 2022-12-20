@@ -5,29 +5,29 @@
     <div v-else-if="record">
       <div class="breadcrumb-wrap">
         <router-link to="/history" class="breadcrumb">
-          <p>{{ translate("history") }}</p>
+          <p>{{ t("history") }}</p>
         </router-link>
 
         <a @click.prevent class="breadcrumb">
-          {{ translate(record.outputedText) }}
+          {{ t(record.outputedText) }}
         </a>
       </div>
 
       <div class="row">
         <div class="col s12 m6">
-          <div :class="[record.outputedColor]" class="card">
+          <div :class="[`${record.outputedColor}-icon`]" class="card">
             <div class="card-content white-text">
               <p>
-                {{ translate("description") }}:
+                {{ t("description") }}:
                 {{ record.description }}
               </p>
 
               <p>
-                {{ translate("sum") }}:
-                {{ formateCurrency(record.amount) }}
+                {{ t("sum") }}:
+                {{ formateCurrency(record.amount, record.currency) }}
               </p>
               <p>
-                {{ translate("category") }}:
+                {{ t("category") }}:
                 {{ record.categoryName }}
               </p>
 
@@ -40,7 +40,7 @@
 
     <div v-else class="center">
       <p>
-        {{ translate("no-entry") }}
+        {{ t("no-entry") }}
       </p>
     </div>
   </div>
@@ -56,19 +56,7 @@ export default {
     preLoader,
   },
 
-  props: {
-    language: {
-      type: String,
-      required: true,
-      default: "ru",
-    },
-
-    translate: {
-      type: Function,
-      required: true,
-      default: () => {},
-    },
-  },
+  inject: ["t"],
 
   data() {
     return {
@@ -79,15 +67,15 @@ export default {
 
   computed: {
     dateLanguaged() {
-      return this.language === "ru" ? "ru-RU" : "en-EN";
+      return this.$store.getters.getLanguage === "ru" ? "ru-RU" : "en-EN";
     },
   },
 
   methods: {
-    formateCurrency(value) {
+    formateCurrency(value, currency = "UAH") {
       const currentBill = new Intl.NumberFormat("en-EN", {
         style: "currency",
-        currency: "UAH",
+        currency,
       }).format(value);
 
       return currentBill;
@@ -136,6 +124,13 @@ export default {
 </script>
 
 <style scoped>
+.green-icon {
+  background: #09b383;
+}
+.red-icon {
+  background: #ee3838;
+}
+
 @media (max-width: 500px) {
   .breadcrumb-wrap {
     display: flex;

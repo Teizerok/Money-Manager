@@ -2,16 +2,13 @@
   <div>
     <div class="app-main-layout">
       <navbarElement
-        @click="isOpenSidebar = !isOpenSidebar"
-        :translate="translate"
-        :language="language"
+        @open="isOpenSidebar = !isOpenSidebar"
+        @close="isOpenSidebar = false"
       />
 
       <sidebarElement
         @change-category="isOpenSidebar = false"
         :isOpen="isOpenSidebar"
-        :translate="translate"
-        :language="language"
       />
 
       <main class="app-content full">
@@ -25,8 +22,8 @@
       </main>
 
       <div class="fixed-action-btn">
-        <router-link class="btn-floating btn-large blue" to="/records">
-          <i class="large material-icons">add</i>
+        <router-link class="btn-floating btn-large" to="/records">
+          <i class="large material-icons waves-effect">add</i>
         </router-link>
       </div>
     </div>
@@ -41,27 +38,11 @@ import messages from "@/utilits/messages.js";
 export default {
   name: "mainLayout",
 
+  inject: ["translate"],
+
   components: {
     navbarElement,
     sidebarElement,
-  },
-
-  props: {
-    language: {
-      type: String,
-      required: true,
-      default: "ru",
-    },
-
-    translate: {
-      type: Function,
-      required: true,
-      default: () => {},
-    },
-  },
-
-  emits: {
-    changeLanguage: null,
   },
 
   data() {
@@ -85,8 +66,10 @@ export default {
       const message = this.$store.getters.getError;
 
       console.log(message);
-      if (messages[language][message]) {
-        M.toast({ html: messages[language][message] });
+      const currentLanguage = this.$store.getters.getLanguage;
+
+      if (messages[currentLanguage][message]) {
+        M.toast({ html: messages[currentLanguage][message] });
       }
       this.$store.commit("clearError");
     },
@@ -99,6 +82,19 @@ export default {
 </script>
 
 <style scoped>
+.app-main-layout {
+  background: #f5f6f7;
+}
+.btn-floating {
+  background: #504ef3;
+}
+
+.btn-floating:hover {
+  background: #3b3abf;
+}
+.btn-floating:focus {
+  background: #3b3abf;
+}
 @media (max-width: 500px) {
   .fixed-action-btn {
     display: none;

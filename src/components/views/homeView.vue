@@ -1,11 +1,14 @@
 <template>
   <div>
     <div class="page-title">
-      <h3>
-        {{ translate("bill") }}
+      <h3 class="title">
+        {{ t("bill") }}
       </h3>
 
-      <button @click="refresh" class="btn waves-effect waves-light btn-small">
+      <button
+        @click="refresh"
+        class="refresh btn waves-effect waves-light btn-small"
+      >
         <i class="material-icons">refresh</i>
       </button>
     </div>
@@ -13,16 +16,8 @@
     <pre-loader v-if="loading" />
 
     <div class="row" v-else>
-      <home-balance-table
-        :rates="rates"
-        :translate="translate"
-        :language="language"
-      />
-      <home-curency-rates
-        :rates="rates"
-        :translate="translate"
-        :language="language"
-      />
+      <home-balance-table :rates="rates" />
+      <home-curency-rates :rates="rates" />
     </div>
   </div>
 </template>
@@ -42,19 +37,7 @@ export default {
     homeCurencyRates,
   },
 
-  props: {
-    language: {
-      type: String,
-      required: true,
-      default: "ru",
-    },
-	
-    translate: {
-      type: Function,
-      required: true,
-      default: () => {},
-    },
-  },
+  inject: ["t"],
 
   data() {
     return {
@@ -79,3 +62,27 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.title {
+  color: #0a101b;
+  font-family: Fredoka, Arial, "Helvetica Neue", Helvetica, sans-serif;
+}
+.refresh {
+  background: #504ef3;
+  border-radius: 50%;
+  width: 46px;
+  height: 46px;
+}
+
+.refresh i {
+  position: relative;
+  top: 1px;
+  left: -1px;
+}
+
+.refresh:hover {
+  background: #3b3abf;
+  transform: rotate(260deg);
+}
+</style>

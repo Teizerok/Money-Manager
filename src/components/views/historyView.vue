@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="page-title">
-      <h3>
-        {{ translate("recording-history") }}
+      <h3 class="title">
+        {{ t("recording-history") }}
       </h3>
     </div>
     <div class="history-chart">
@@ -13,28 +13,23 @@
 
     <div v-else-if="!records.length" class="center">
       <p>
-        {{ translate("no-entries") }}
+        {{ t("no-entries") }}
       </p>
       <router-link to="/records">
-        {{ translate("create-new-entry") }}
+        {{ t("create-new-entry") }}
       </router-link>
     </div>
 
     <section v-else>
-      <history-table
-        @delete-record="deleteRecord"
-        :records="paginatedPage"
-        :translate="translate"
-        :language="language"
-      />
+      <history-table @delete-record="deleteRecord" :records="paginatedPage" />
 
       <paginate
         v-show="countedPages > 1"
         v-model="page"
         :page-count="countedPages"
         :container-class="'pagination'"
-        :prev-text="translate('previous')"
-        :next-text="translate('next')"
+        :prev-text="t('previous')"
+        :next-text="t('next')"
         :page-class="'waves-effect'"
         :prev-class="'waves-effect'"
         :next-class="'waves-effect'"
@@ -51,6 +46,7 @@
 import historyTable from "../views-components/historyTable.vue";
 import preLoader from "./preLoader.vue";
 import Paginate from "vuejs-paginate-next";
+import { loadRatesFor } from "../../api";
 import { Pie } from "vue-chartjs";
 
 export default {
@@ -64,19 +60,7 @@ export default {
     Paginate,
   },
 
-  props: {
-    language: {
-      type: String,
-      required: true,
-      default: "ru",
-    },
-
-    translate: {
-      type: Function,
-      required: true,
-      default: () => {},
-    },
-  },
+  inject: ["t"],
 
   data() {
     return {
@@ -91,7 +75,7 @@ export default {
     paginatedPage() {
       const start = (this.page - 1) * this.pageSize;
       const end = this.page * this.pageSize;
-      return this.records.slice(start, end);
+      return [...this.records].reverse().slice(start, end);
     },
 
     countedPages() {
@@ -126,7 +110,11 @@ export default {
         };
       });
     },
-    renderGraph(categories) {
+    async renderGraph(categories) {
+      const rates = await loadRatesFor(
+        this.$store.getters.info.currentCurrency
+      );
+
       this.renderChart({
         labels: categories.map((category) => category.title),
         datasets: [
@@ -135,9 +123,12 @@ export default {
 
             data: categories.map((category) => {
               return this.records.reduce((total, rec) => {
-                if (rec.category === category.key && rec.type === "outcome")
-                  total += +rec.amount;
+                if (rec.category === category.key && rec.type === "outcome") {
+                  let transaction = rec.amount / (rates[rec.currency] || 1);
+                  transaction = transaction.toFixed(2);
 
+                  total += +transaction;
+                }
                 return total;
               }, 0);
             }),
@@ -184,3 +175,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.title {
+  color: #0a101b;
+}
+</style>

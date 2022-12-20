@@ -1,8 +1,8 @@
 <template>
-  <form @submit.prevent="submitHandler" class="card auth-card">
+  <form v-if="!loading" @submit.prevent="submitHandler" class="card auth-card">
     <div class="card-content">
       <span class="card-title">
-        {{ translate("home-bookkeeping") }}
+        {{ t("home-bookkeeping") }}
       </span>
 
       <div class="input-field">
@@ -17,11 +17,11 @@
         />
 
         <label for="email">
-          {{ translate("email") }}
+          {{ t("email") }}
         </label>
 
         <small v-if="erroredEmail" class="helper-text invalid">
-          {{ translate("enter-your-email") }}
+          {{ t("enter-your-email") }}
         </small>
       </div>
 
@@ -37,44 +37,51 @@
         />
 
         <label for="password">
-          {{ translate("password") }}
+          {{ t("password") }}
         </label>
 
         <small v-if="erroredPass" class="helper-text invalid">
-          {{ translate("enter-password") }}
+          {{ t("enter-password") }}
           {{ minLength }}
-          {{ translate("characters") }}
+          {{ t("characters") }}
         </small>
       </div>
     </div>
 
-    <div class="card-action">
+    <div class="card-action lighten-5">
       <div>
-        <button class="btn waves-effect waves-light auth-submit" type="submit">
-          {{ translate("sign-in") }}
+        <button
+          class="send-button btn waves-effect blue lighten-1 auth-submit"
+          type="submit"
+        >
+          {{ t("sign-in") }}
           <i class="material-icons right">send</i>
         </button>
       </div>
 
-      <p class="center helper-text-account">
-        {{ translate("do-not-have-account") }}
+      <p class="has-account center helper-text-account">
+        {{ t("do-not-have-account") }}
 
-        <router-link to="/register">
-          {{ translate("register") }}
+        <router-link class="register" to="/register">
+          <span class="blue-text text-darken-1">{{
+            t("register")
+          }}</span>
         </router-link>
       </p>
 
       <div class="switch center">
         <label>
-          {{ translate("english") }}
-          <input v-model="isRussian" type="checkbox" />
+          {{ t("russian") }}
+          <input v-model="isEnglish" type="checkbox" />
 
           <span class="lever"></span>
-          {{ translate("russian") }}
+          {{ t("english") }}
         </label>
       </div>
     </div>
   </form>
+
+  <pre-loader v-else />
 </template>
 
 
@@ -83,6 +90,7 @@
 import useVuelidate from "@vuelidate/core";
 import messages from "@/utilits/messages.js";
 import { required, email, minLength } from "@vuelidate/validators";
+import preLoader from "./preLoader.vue";
 
 export default {
   name: "login",
@@ -91,28 +99,18 @@ export default {
     return { v$: useVuelidate() };
   },
 
-  props: {
-    language: {
-      type: String,
-      required: true,
-      default: "ru",
-    },
-    translate: {
-      type: Function,
-      required: true,
-      default: () => {},
-    },
+  components: {
+    preLoader,
   },
 
-  emits: {
-    changeLanguage: null,
-  },
+  inject: ["t"],
 
   data() {
     return {
       email: "",
       password: "",
-      isRussian: true,
+      isEnglish: true,
+      loading: false,
     };
   },
 
@@ -148,37 +146,70 @@ export default {
       };
 
       try {
+        this.loading = true;
         await this.$store.dispatch("login", formSend);
         this.$router.push("/");
-      } catch (e) {}
+      } catch (e) {
+        this.loading = false;
+      }
     },
   },
 
   watch: {
-    isRussian() {
-      const currentLanguage = this.isRussian === true ? "ru" : "en";
-      this.$emit("changeLanguage", currentLanguage);
+    isEnglish() {
+      const currentLanguage = this.isEnglish === true ? "en" : "ru";
+      this.$store.commit("setLanguage", currentLanguage);
+    },
+
+    loading() {
+      this.$nextTick().then(() => {
+        M.updateTextFields();
+      });
     },
   },
 
   created() {
-    this.isRussian = this.language === "ru" ? true : false;
+    this.isEnglish = this.$store.getters.getLanguage === "en" ? true : false;
   },
 
   mounted() {
     const message = this.$route.query.message;
+    const currentLanguage = this.$store.getters.getLanguage;
 
-    if (messages[this.language][message]) {
-      M.toast({ html: messages[this.language][message] });
+    if (messages[currentLanguage][message]) {
+      M.toast({ html: messages[currentLanguage][message] });
     }
   },
 };
 </script>
 
 <style scoped>
-@media (max-width: 700px) {
+.input-field input[type="text"]:focus + label,
+.input-field input[type="number"]:focus + label,
+.input-field input[type="password"]:focus + label,
+.materialize-textarea:focus:not([readonly]) + label {
+  color: #42a5f5 !important;
+}
+
+.input-field input[type="text"]:focus,
+.input-field input[type="number"]:focus,
+.input-field input[type="password"]:focus,
+.materialize-textarea:focus:not([readonly]) {
+  border-bottom: 1px solid #42a5f5 !important;
+  box-shadow: 0 1px 0 0 #42a5f5 !important;
+}
+
+.switch label input[type="checkbox"]:checked + .lever:after {
+  background-color: #0091ea;
+}
+
+.switch label input[type="checkbox"]:checked + .lever {
+  background-color: #bbdefb;
+}
+
+@media (max-width: 550px) {
   .card {
-    width: 400px;
+    max-width: 400px;
   }
   .card-title {
     font-size: 26px;
@@ -204,11 +235,49 @@ export default {
   .switch switch {
     font-size: 39px;
   }
+  .register span {
+    padding: 0 0 0 20px;
+  }
 }
 
 @media (max-width: 450px) {
   .card {
-    width: 250px;
+    max-width: 350px;
   }
+  .send-button {
+    margin: 10px 0 5px;
+  }
+  .has-account {
+    margin-bottom: 20px;
+  }
+  .switch {
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 375px) {
+  .card {
+    max-width: 250px;
+  }
+  .register {
+    font-size: 14px;
+  }
+  .helper-text-account {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .switch label {
+    font-size: 13px;
+  }
+}
+
+.card {
+  border-radius: 15px;
+  overflow: hidden;
+}
+.auth-submit {
+  border-radius: 6px;
 }
 </style>

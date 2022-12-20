@@ -1,13 +1,13 @@
 <template>
   <div class="col s12 m6">
-    <div>
+    <div class="edit">
       <div class="page-subtitle">
         <h4>
-          {{ translate("edit") }}
+          {{ t("edit") }}
         </h4>
       </div>
 
-      <form @submit.prevent="submitHandler">
+      <form @submit.prevent="submitHandler" class="form">
         <div class="input-field">
           <select v-model="currentCategory" ref="select">
             <option
@@ -15,12 +15,12 @@
               :key="key"
               :value="key"
             >
-              {{ title }}
+              <span class="select-option">{{ title }}</span>
             </option>
           </select>
 
           <label>
-            {{ translate("select-category") }}
+            {{ t("select-category") }}
           </label>
         </div>
 
@@ -34,11 +34,11 @@
             type="text"
           />
           <label for="name">
-            {{ translate("name") }}
+            {{ t("name") }}
           </label>
 
           <span v-show="erroredTitle" class="helper-text invalid">
-            {{ translate("enter-category-name") }}
+            {{ t("enter-category-name") }}
           </span>
         </div>
 
@@ -52,31 +52,51 @@
             type="number"
           />
           <label for="limit">
-            {{ translate("limit") }}
+            {{ t("limit") }}
           </label>
 
           <span v-show="erroredLimit" class="helper-text invalid">
-            {{ translate("minimum-value") }}
+            {{ t("minimum-value") }}
             {{ minSum }} UAH
           </span>
         </div>
 
-        <button class="btn waves-effect waves-light" type="submit">
-          {{ translate("update") }}
-          <i class="material-icons right">send</i>
-        </button>
+        <div class="buttons">
+          <button
+            class="btn waves-effect waves-light send-button"
+            type="submit"
+          >
+            <span class="update-text">{{ t("update") }}</span>
+            <i class="material-icons right">update</i>
+          </button>
+
+          <button
+            @click.prevent="deleteHandler"
+            class="btn waves-effect red delete-button"
+          >
+            <i class="material-icons right">delete</i>
+          </button>
+        </div>
       </form>
     </div>
   </div>
+
+  <Popup ref="popup" />
 </template>
 
 <script>
 import useVuelidate from "@vuelidate/core";
 import messages from "@/utilits/messages.js";
 import { required, minValue } from "@vuelidate/validators";
-
+import Popup from "../common/Popup.vue";
 export default {
   name: "categoryEdit",
+
+  inject: ["t"],
+
+  components: {
+    Popup,
+  },
 
   props: {
     categories: {
@@ -84,22 +104,11 @@ export default {
       required: true,
       default: [],
     },
-
-    language: {
-      type: String,
-      required: true,
-      default: "ru",
-    },
-
-    translate: {
-      type: Function,
-      required: true,
-      default: () => {},
-    },
   },
 
   emits: {
     updated: null,
+    deleted: null,
   },
 
   setup() {
@@ -150,9 +159,28 @@ export default {
       try {
         this.$store.dispatch("updateCategories", dataCategory);
 
+        const currentLanguage = this.$store.getters.getLanguage;
+
         this.$emit("updated");
-        M.toast({ html: messages[this.language]["category-updated"] });
+        M.toast({ html: messages[currentLanguage]["category-updated"] });
       } catch (e) {}
+    },
+
+    async deleteHandler() {
+      /*
+      const isDelete = await this.$refs.popup.open();
+
+      if (!isDelete) return;
+     
+      try {
+        this.$store.dispatch("deleteCategories", this.currentCategory);
+
+        const currentLanguage = this.$store.getters.getLanguage;
+
+        this.$emit("deleted");
+        M.toast({ html: messages[currentLanguage]["category-deleted"] });
+      } catch (e) {}
+	  */
     },
   },
 
@@ -192,6 +220,49 @@ export default {
 
 
 <style scoped>
+.edit {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.page-subtitle {
+  height: 40px;
+}
+
+.send-button {
+  background: #504ef3;
+  border-radius: 6px;
+  width: 250px;
+}
+
+.delete-button {
+  border-radius: 6px;
+  width: 52px;
+}
+
+.select-option {
+  color: #504ef3;
+}
+
+.buttons {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.input-field {
+  width: 350px;
+  margin: 0 0 30px 0;
+}
+
 @media (max-width: 600px) {
   label {
     font-size: 18px;
@@ -203,5 +274,53 @@ export default {
   .btn {
     font-size: 18px;
   }
+}
+
+@media (max-width: 400px) {
+  .input-field {
+    width: 200px;
+  }
+  .buttons {
+    width: 95%;
+  }
+
+  .send-button {
+    width: 100px;
+  }
+  .update-text {
+    display: none;
+  }
+
+  .send-button {
+    display: flex;
+    justify-content: start;
+  }
+  .send-button i {
+    padding: 0 0 0 12px;
+  }
+}
+
+.input-field input[type="text"]:focus + label,
+.input-field input[type="number"]:focus + label,
+.materialize-textarea:focus:not([readonly]) + label {
+  color: #504ef3 !important;
+}
+
+.input-field input[type="text"]:focus,
+.input-field input[type="number"]:focus,
+.materialize-textarea:focus:not([readonly]) {
+  border-bottom: 1px solid #504ef3 !important;
+  box-shadow: 0 1px 0 0 #504ef3 !important;
+}
+
+[type="radio"]:checked + span:after,
+[type="radio"].with-gap:checked + span:before,
+[type="radio"].with-gap:checked + span:after {
+  border: 2px solid #504ef3;
+}
+
+[type="radio"]:checked + span:after,
+[type="radio"].with-gap:checked + span:after {
+  background-color: #504ef3;
 }
 </style>

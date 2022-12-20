@@ -2,9 +2,9 @@
   <div>
     <div class="page-title">
       <h3>
-        {{ translate("planning") }}
+        {{ t("planning") }}
       </h3>
-      <h4>
+      <h4 class="bill">
         {{ formatedCurrency }}
       </h4>
     </div>
@@ -13,10 +13,10 @@
 
     <div v-else-if="!categories.length" class="center">
       <p>
-        {{ translate("no-categories") }}
+        {{ t("no-categories") }}
       </p>
       <router-link to="/categories">
-        {{ translate("create-new-category") }}
+        {{ t("create-new-category") }}
       </router-link>
     </div>
 
@@ -26,10 +26,11 @@
           <strong>
             {{ category.title }}
           </strong>
-
-          {{ category.spend }}
-          {{ translate("of") }}
-          {{ category.limit }}
+          <span class="amount">
+            {{ correctAmount(category.spend) }}
+            {{ t("of") }}
+            {{ category.limit }}
+          </span>
         </p>
 
         <div class="progress">
@@ -46,6 +47,7 @@
 
 <script>
 import preLoader from "./preLoader.vue";
+import { loadRatesFor } from "../../api";
 
 export default {
   name: "planning",
@@ -54,19 +56,7 @@ export default {
     preLoader,
   },
 
-  props: {
-    language: {
-      type: String,
-      required: true,
-      default: "ru",
-    },
-
-    translate: {
-      type: Function,
-      required: true,
-      default: () => {},
-    },
-  },
+  inject: ["t"],
 
   data() {
     return {
@@ -77,16 +67,26 @@ export default {
 
   computed: {
     formatedCurrency() {
+      const currentCurrency = this.$store.getters.info.currentCurrency;
+
       const currentBill = new Intl.NumberFormat("en-EN", {
         style: "currency",
-        currency: "UAH",
+        currency: currentCurrency,
       }).format(this.$store.getters.info.bill);
 
       return currentBill;
     },
   },
 
+  methods: {
+    correctAmount(amount) {
+      return amount.toFixed(2);
+    },
+  },
+
   async created() {
+    const rates = await loadRatesFor(this.$store.getters.info.currentCurrency);
+
     const categories = await this.$store.dispatch("getCategories");
     const records = await this.$store.dispatch("getRecords");
 
@@ -102,7 +102,9 @@ export default {
         .filter((record) => record.type === "outcome");
 
       const spend = currentRecords.reduce((total, record) => {
-        return total + record.amount;
+        let transaction = record.amount / (rates[record.currency] || 1);
+
+        return total + +transaction;
       }, 0);
 
       const procent = (100 * spend) / category.limit;
@@ -127,6 +129,39 @@ export default {
 </script>
 
 <style scoped>
+.progress {
+  background-color: rgb(255, 255, 255);
+  height: 6px;
+  border-radius: 6px;
+}
+
+.progress .determinate {
+  background-color: rgb(210, 0, 200);
+}
+.progress .determinate:before {
+  content: "";
+  position: absolute;
+  background-color: rgb(45, 42, 130);
+  top: 0;
+  left: 0;
+  bottom: 0;
+  will-change: left, right;
+}
+.progress .determinate:after {
+  content: "";
+  position: absolute;
+  background-color: rgb(42, 130, 48);
+  top: 0;
+  left: 0;
+  bottom: 0;
+  will-change: left, right;
+}
+
+.amount {
+  padding: 0 0 0 6px;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+}
+
 @media (max-width: 700px) {
   .page-title {
     align-items: start;
@@ -141,6 +176,9 @@ export default {
   h4 {
     font-size: 22px;
   }
+}
+.bill {
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
 }
 </style>
 
