@@ -1,5 +1,5 @@
 <template>
-  <div class="col s12 m6 l4">
+  <div class="col s12 m6 l4" v-if="$store.getters.info.bill">
     <div class="card bill-card">
       <div class="card-content white-text">
         <span class="card-title">

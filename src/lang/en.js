@@ -59,4 +59,6 @@ export default {
 	"choice-language": "Choose language",
 	"ukrainien": "Ukrainian",
 	"franch": "French",
+	"warning-text": "When deleting a category, all records previously entered into it will be completely deleted. Are you sure?",
+	"warning-title": "Warning"
 }

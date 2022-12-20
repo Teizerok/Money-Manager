@@ -80,7 +80,7 @@
 
         <span v-show="erroredAmount" class="helper-text invalid">
           {{ t("minimum-value") }}
-          {{ minSum }} UAH
+          {{ minSum }}
         </span>
       </div>
 
@@ -243,7 +243,7 @@ export default {
       return;
     }
     this.selectCategory = this.categories[0].key;
-    this.selectCurrensies = this.currencies[0];
+    this.selectCurrensies = this.$store.getters.info.currentCurrency;
 
     this.$nextTick().then(() => {
       M.updateTextFields();

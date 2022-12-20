@@ -61,12 +61,21 @@ export default {
 				throw e
 			}
 		},
-		async deleteCategories({ commit, dispatch }, key) {
+		async deleteCategories({ commit, dispatch }, keyCategory) {
 			try {
 				const database = getDatabase();
 				const uid = await dispatch('getUId')
 
-				await set(ref(database, `users/${uid}/categories/${key}`), null)
+				const records = await dispatch('getRecords')
+				await set(ref(database, `users/${uid}/categories/${keyCategory}`), null)
+
+				records.forEach(async (record) => {
+					if (record.category === keyCategory) {
+						await dispatch('deleteRecord', { key: record.key })
+					}
+				})
+
+
 			} catch (e) {
 				const message = await dispatch('normalizeError', e)
 				commit('setError', message)

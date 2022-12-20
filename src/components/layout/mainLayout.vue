@@ -4,6 +4,7 @@
       <navbarElement
         @open="isOpenSidebar = !isOpenSidebar"
         @close="isOpenSidebar = false"
+        :isOpen="isOpenSidebar"
       />
 
       <sidebarElement

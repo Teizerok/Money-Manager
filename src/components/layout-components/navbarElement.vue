@@ -1,12 +1,22 @@
+// <a @click.prevent="$emit('open')" href="#">
+  //        <i class="burger material-icons white-text">dehaze</i>
+     //   </a>
+
 <template>
   <nav class="navbar">
     <div class="nav-wrapper">
-      <div class="navbar-left">
-        <a @click.prevent="$emit('open')" href="#">
-          <i class="burger material-icons white-text">dehaze</i>
-        </a>
+      <div class="navbar-left nav-container">
+        <div
+          :class="{ open: isOpen }"
+          @click.prevent="$emit('open')"
+          class="hamburger-lines"
+        >
+          <span class="line line1"></span>
+          <span class="line line2"></span>
+          <span class="line line3"></span>
+        </div>
 
-        <span class="white-text">
+        <span class="white-text date">
           {{ formatedDate }}
         </span>
       </div>
@@ -59,6 +69,14 @@ export default {
     };
   },
 
+  props: {
+    isOpen: {
+      type: Boolean,
+      required: true,
+      default: true,
+    },
+  },
+
   emits: {
     open: null,
     close: null,
@@ -109,6 +127,57 @@ export default {
 }
 .go-out {
   color: #f32b49;
+}
+
+.date {
+  padding: 0 0 0 50px;
+}
+
+.nav-container .hamburger-lines {
+  display: block;
+  height: 26px;
+  width: 34px;
+  position: absolute;
+  top: 20px;
+  left: 0px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.hamburger-lines .line {
+  display: block;
+  height: 2px;
+  width: 100%;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.hamburger-lines .line1 {
+  transform-origin: 0% 0%;
+  transition: transform 0.4s ease-in-out;
+}
+
+.hamburger-lines .line2 {
+  transition: transform 0.2s ease-in-out;
+}
+
+.hamburger-lines .line3 {
+  transform-origin: 0% 100%;
+  transition: transform 0.4s ease-in-out;
+}
+
+.hamburger-lines.open .line1 {
+  transform: rotate(45deg);
+}
+.hamburger-lines.open .line2 {
+  transform: scaleY(0);
+}
+
+.hamburger-lines.open .line3 {
+  transform: rotate(-45deg);
 }
 </style>
 

@@ -1,11 +1,29 @@
 <template>
   <div v-if="isOpen" :class="{ open: isOpen }" class="popup">
-    <div @click.stop="onFalse" class="popup__layout">
-      <div class="popup__content">
-        <h2 class="popup_title">title</h2>
+    <div @click.stop="onCancel" class="popup__layout">
+      <div @click.stop class="popup__content">
+        <h2 class="popup_title">{{ t("warning-title") }}</h2>
 
-        <button @click="onTrue">true</button>
-        <button @click="onFalse">false</button>
+        <div class="popup__text">
+          <p>{{ t("warning-text") }}</p>
+        </div>
+
+        <div class="buttons">
+          <button
+            @click.prevent="onCancel"
+            class="btn waves-effect blue cancel-button"
+          >
+            <span class="update-text">{{ t("update") }}</span>
+            <i class="material-icons right">cancel</i>
+          </button>
+          <button
+            @click.prevent="onDelete"
+            class="btn waves-effect red delete-button"
+          >
+            <span class="update-text">{{ t("delete") }}</span>
+            <i class="material-icons right">delete</i>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -16,6 +34,9 @@ export default {
   data: () => ({
     isOpen: false,
   }),
+
+  inject: ["t"],
+
   popupontroller: {},
 
   methods: {
@@ -27,7 +48,7 @@ export default {
 
       this.$options.popupontroller = { resolve };
 
-      this.this.isOpen = true;
+      this.isOpen = true;
       this.$store.commit("openPopup");
 
       return promise;
@@ -38,14 +59,14 @@ export default {
       this.$store.commit("closePopup");
     },
 
-    onTrue() {
-      this.$options.popupontroller.resolve(true);
+    onCancel() {
       this.close();
+      this.$options.popupontroller.resolve(false);
     },
 
-    onFasle() {
-      this.$options.popupontroller.resolve(false);
+    onDelete() {
       this.close();
+      this.$options.popupontroller.resolve(true);
     },
   },
 };
@@ -76,6 +97,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 0 10px;
 }
 
 .popup__content {
@@ -83,10 +105,79 @@ export default {
   position: relative;
   background: #fff;
   border-radius: 6px;
-  width: 300px;
+  max-width: 600px;
+  width: 100%;
   min-height: 300px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 20px;
+}
+
+.popup_title {
+  margin: 0 0 10px 0;
+  font-size: 40px;
+}
+
+.popup__text {
+  flex: 1 1 auto;
+  width: 50%;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 60%;
+}
+
+.cancel-button {
+  border-radius: 6px;
+}
+
+.delete-button {
+  border-radius: 6px;
+}
+
+@media (max-width: 606px) {
+  .cancel-button span {
+    display: none;
+  }
+  .cancel-button i {
+    position: relative;
+    left: -6px;
+    font-size: 25px;
+  }
+
+  .delete-button span {
+    display: none;
+  }
+
+  .delete-button i {
+    position: relative;
+    left: -6px;
+    font-size: 25px;
+  }
+
+  .popup_title {
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 340px) {
+  .cancel-button {
+    width: 60px;
+  }
+
+  .delete-button {
+    width: 60px;
+  }
+
+  .cancel-button i {
+    left: 0px;
+  }
+
+  .delete-button i {
+    left: 0px;
+  }
 }
 </style>

@@ -57,7 +57,7 @@
 
           <span v-show="erroredLimit" class="helper-text invalid">
             {{ t("minimum-value") }}
-            {{ minSum }} UAH
+            {{ minSum }}
           </span>
         </div>
 
@@ -127,7 +127,7 @@ export default {
   validations() {
     return {
       title: { required },
-      limit: { minValue: minValue(100), required },
+      limit: { minValue: minValue(1), required },
     };
   },
 
@@ -167,11 +167,10 @@ export default {
     },
 
     async deleteHandler() {
-      /*
       const isDelete = await this.$refs.popup.open();
 
       if (!isDelete) return;
-     
+
       try {
         this.$store.dispatch("deleteCategories", this.currentCategory);
 
@@ -180,7 +179,6 @@ export default {
         this.$emit("deleted");
         M.toast({ html: messages[currentLanguage]["category-deleted"] });
       } catch (e) {}
-	  */
     },
   },
 

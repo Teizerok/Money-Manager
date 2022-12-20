@@ -11,7 +11,7 @@
 
     <pre-loader v-if="loading" />
 
-    <div v-else-if="!records.length" class="center">
+    <div v-else-if="!records.length" class="no-entries">
       <p>
         {{ t("no-entries") }}
       </p>
@@ -94,6 +94,8 @@ export default {
     },
 
     normalizeRecord(categories, records) {
+      if (!categories.length || !records.length) return;
+
       this.records = records.map((record) => {
         const categoryName = categories.find(
           (category) => category.key === record.category
@@ -111,6 +113,8 @@ export default {
       });
     },
     async renderGraph(categories) {
+      if (!categories.length) return;
+
       const rates = await loadRatesFor(
         this.$store.getters.info.currentCurrency
       );
@@ -179,5 +183,14 @@ export default {
 <style scoped>
 .title {
   color: #0a101b;
+}
+
+.no-entries {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  position: relative;
+  top: -150px;
 }
 </style>

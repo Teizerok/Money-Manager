@@ -59,4 +59,6 @@ export default {
 	"choice-language": "Выберите язык",
 	"ukrainien": "Украинский",
 	"franch": "Французкий",
+	"warning-text": "При удалении категории все ранее занесеные в нее записи будут полностью удалены. Вы уверены?",
+	"warning-title": "Warning"
 }

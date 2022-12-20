@@ -108,6 +108,9 @@ export default {
 		},
 		getLanguage(state) {
 			return state.infoUser.language
+		},
+		isPopupOpen(state) {
+			return state.isPopup
 		}
 	},
 

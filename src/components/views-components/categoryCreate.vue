@@ -41,7 +41,7 @@
 
           <span v-show="erroredLimit" class="helper-text invalid">
             {{ t("minimum-value") }}
-            {{ minSum }} UAH
+            {{ minSum }} 
           </span>
         </div>
 
@@ -83,7 +83,7 @@ export default {
   validations() {
     return {
       title: { required },
-      limit: { minValue: minValue(100), required },
+      limit: { minValue: minValue(1), required },
     };
   },
 
