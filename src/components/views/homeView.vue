@@ -17,6 +17,7 @@
 
     <div class="row" v-else>
       <home-balance-table :rates="rates" />
+
       <home-curency-rates :rates="rates" />
     </div>
   </div>

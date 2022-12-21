@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :class="{ popupOpen: $store.getters.isPopupOpen }">
     <pre-loader v-if="loading" />
     <component v-else :is="layout" :translate="translate">
       <router-view />
@@ -93,5 +93,11 @@ export default {
 
 body {
   font-family: Fredoka, Arial, "Helvetica Neue", Helvetica, sans-serif;
+}
+
+.popupOpen {
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
 }
 </style>

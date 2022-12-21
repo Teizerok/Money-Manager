@@ -92,6 +92,7 @@ export default {
 @media (max-width: 600px) {
   .sidenav {
     width: 100%;
+    position: fixed;
   }
 }
 </style>

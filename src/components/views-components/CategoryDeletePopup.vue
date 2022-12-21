@@ -40,9 +40,11 @@ export default {
     Popup,
   },
 
+  //функция перевода
   inject: ["t"],
 
   methods: {
+    //открытие попапа через внутрений публичный метод
     async open() {
       const promise = await this.$refs.popup.open();
       return promise;

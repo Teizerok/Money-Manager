@@ -1,7 +1,7 @@
 <template>
-  <div v-show="isOpen" :class="{ open: isOpen }" class="popup">
-    <div @click.stop="onCancel" class="popup__layout">
-      <div @click.stop class="popup__content">
+  <div :class="{ open: isOpen }" class="popup">
+    <div @click.stop="onFalse" class="popup__layout">
+      <div @click.stop class="popup__content" :class="{ open: isOpen }">
         <slot name="header"> </slot>
         <slot name="content"> </slot>
         <slot name="footer" :onDelete="onTrue" :onCancel="onFalse"> </slot>
@@ -19,6 +19,8 @@ export default {
   popupontroller: {},
 
   methods: {
+    //публичный метод открытия попапа который возвращает promise который будет заразелвен через какое то время
+    //когда это произойдет он будет закрыт
     open() {
       let resolve;
       const promise = new Promise((res, rej) => {
@@ -33,17 +35,20 @@ export default {
       return promise;
     },
 
+    //закрытие попапа
     close() {
       this.isOpen = false;
       this.$store.commit("closePopup");
     },
 
+    //метод ресолвещий false
     onFalse() {
       this.close();
       this.$options.popupontroller.resolve(false);
       //onCancel
     },
 
+    //метод ресолвещий true
     onTrue() {
       this.close();
       this.$options.popupontroller.resolve(true);
@@ -64,13 +69,13 @@ export default {
   overflow: hidden;
   opacity: 0;
   visibility: hidden;
-  transition: all 600ms ease-out;
+  transition: all 500ms ease-out;
 }
 
 .popup.open {
   opacity: 1;
   visibility: visible;
-  transition: all 600ms ease-out;
+  transition: all 300ms ease-out;
 }
 
 .popup__layout {
@@ -97,11 +102,11 @@ export default {
   align-items: center;
   padding: 20px;
   top: -200px;
-  transition: all 600ms ease-out;
+  transition: all 800ms ease-in-out;
 }
 
-.popup.open .popup__content {
-  transition: all 600ms ease-out;
+.popup__content.open {
+  transition: all 600ms ease-in-out;
   top: 0;
 }
 </style>

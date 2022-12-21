@@ -25,8 +25,7 @@
             data-target="dropdown"
             ref="dropdown"
           >
-            {{ name }}
-            <i class="material-icons right">arrow_drop_down</i>
+            <span class="name"> {{ name }}</span>
           </a>
 
           <ul id="dropdown" class="dropdown-content">
@@ -128,14 +127,17 @@ export default {
 .go-out {
   color: #f32b49;
 }
+.name {
+  font-size: 18px;
+}
 
 .date {
   padding: 0 0 0 50px;
 }
 
-@media (max-width: 290px) {
-  .date {
-    padding: 0 0 0 40px;
+@media (max-width: 600px) {
+  .navbar {
+    position: fixed;
   }
 }
 
@@ -184,6 +186,18 @@ export default {
 
 .hamburger-lines.open .line3 {
   transform: rotate(-45deg);
+}
+
+.arrow-icon {
+  position: relative;
+  left: -10px;
+  transform: rotate(0deg);
+  transition: all 500ms ease-in-out;
+}
+
+.arrow-icon.open {
+  transform: rotate(180deg);
+  transition: all 500ms ease-out;
 }
 </style>
 
