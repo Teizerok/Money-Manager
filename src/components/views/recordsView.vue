@@ -145,6 +145,7 @@ export default {
     return { v$: useVuelidate() };
   },
 
+  //функция перевода
   inject: ["t"],
 
   data() {
@@ -164,13 +165,15 @@ export default {
     };
   },
 
+  //валидаторы
   validations() {
     return {
-      description: { required },
+      description: {},
       amount: { minValue: minValue(1), required },
     };
   },
 
+  //свойства для валидаторов
   computed: {
     minSum() {
       return this.v$.amount.minValue.$params.min;
@@ -183,27 +186,26 @@ export default {
     erroredAmount() {
       return this.v$.amount.$error;
     },
-
-    currentBill() {
-      return this.type === "income"
-        ? this.$store.getters.info.bill + this.amount
-        : this.$store.getters.info.bill - this.amount;
-    },
   },
 
   methods: {
+    //метод проерки наличия средств на кошельке при удаче возвращает true
     async hasBillCheck() {
       if (this.type === "income") {
         return true;
       }
 
+      //счет и курсы валют к выбраной в.
       const rates = await loadRatesFor(this.$store.getters.currentCurrency);
       const bill = this.$store.getters.info.bill;
 
+      //если средсва аккаунта в валюте выброной пользователем больше вернется true
       return rates[this.selectCurrensies] * bill >= this.amount ? true : false;
     },
 
+    //при submit-е формы
     async submitHandler() {
+      //проверка корректности валидаторов
       const isFormCorrect = await this.v$.$validate();
       const currentLanguage = this.$store.getters.getLanguage;
 
@@ -216,6 +218,7 @@ export default {
         return;
       }
 
+      //подготовка данных для создания новой записи
       const dataToRecord = {
         category: this.selectCategory,
         amount: this.amount,
@@ -225,10 +228,13 @@ export default {
         currency: this.selectCurrensies,
       };
 
+      //создание
       await this.$store.dispatch("createRecord", dataToRecord);
 
+      //уведомление о создании
       M.toast({ html: messages[currentLanguage]["record-completed"] });
 
+      //очистка полей
       this.amount = 0;
       this.description = "";
       this.v$.$reset();
@@ -236,15 +242,19 @@ export default {
   },
 
   async created() {
+    //получение категорий
     this.categories = await this.$store.dispatch("getCategories");
     this.loading = false;
 
     if (!this.categories.length) {
       return;
     }
+
+    //установка начальных свойств полей
     this.selectCategory = this.categories[0].key;
     this.selectCurrensies = this.$store.getters.info.currentCurrency;
 
+    //обновление формы
     this.$nextTick().then(() => {
       M.updateTextFields();
       this.formSelect = M.FormSelect.init(this.$refs.select);

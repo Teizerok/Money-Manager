@@ -50,10 +50,7 @@
 
     <div class="card-action lighten-5">
       <div>
-        <button
-          class="send-button btn waves-effect blue lighten-1 auth-submit"
-          type="submit"
-        >
+        <button class="send-button btn waves-effect auth-submit" type="submit">
           {{ t("sign-in") }}
           <i class="material-icons right">send</i>
         </button>
@@ -63,9 +60,7 @@
         {{ t("do-not-have-account") }}
 
         <router-link class="register" to="/register">
-          <span class="blue-text text-darken-1">{{
-            t("register")
-          }}</span>
+          <span class="blue-text text-darken-1">{{ t("register") }}</span>
         </router-link>
       </p>
 
@@ -103,6 +98,7 @@ export default {
     preLoader,
   },
 
+  //функция перевода
   inject: ["t"],
 
   data() {
@@ -114,6 +110,7 @@ export default {
     };
   },
 
+  //валидаторы
   validations() {
     return {
       email: { required, email },
@@ -121,6 +118,7 @@ export default {
     };
   },
 
+  //свойства для алидаторов
   computed: {
     minLength() {
       return this.v$.password.minLength.$params.min;
@@ -136,15 +134,19 @@ export default {
   },
 
   methods: {
+    //при submit-е формы
     async submitHandler() {
+      //проверка корректности валидаторов
       const isFormCorrect = await this.v$.$validate();
       if (!isFormCorrect) return;
 
+      //подготовка данных для входа в сессию
       const formSend = {
         email: this.email,
         password: this.password,
       };
 
+      //вход в сессию
       try {
         this.loading = true;
         await this.$store.dispatch("login", formSend);
@@ -156,11 +158,13 @@ export default {
   },
 
   watch: {
+    //
     isEnglish() {
       const currentLanguage = this.isEnglish === true ? "en" : "ru";
       this.$store.commit("setLanguage", currentLanguage);
     },
 
+    //обновление полей
     loading() {
       this.$nextTick().then(() => {
         M.updateTextFields();
@@ -168,13 +172,27 @@ export default {
     },
   },
 
+  //получение выбраного языка
   created() {
-    this.isEnglish = this.$store.getters.getLanguage === "en" ? true : false;
+    const currentLanguage = this.$store.getters.getLanguage;
+
+    if (!currentLanguage) {
+      this.$store.commit("setLanguage", "en");
+      this.isEnglish = true;
+      return;
+    }
+
+    if (currentLanguage !== "en") {
+      this.isEnglish = false;
+      return;
+    }
+    this.isEnglish = true;
   },
 
+  //если имеется какие то ключи query params, существующие в utilits то будет выкинута подсказака
   mounted() {
     const message = this.$route.query.message;
-    const currentLanguage = this.$store.getters.getLanguage;
+    const currentLanguage = this.$store.getters.getLanguage || "en";
 
     if (messages[currentLanguage][message]) {
       M.toast({ html: messages[currentLanguage][message] });
@@ -184,23 +202,27 @@ export default {
 </script>
 
 <style scoped>
+.auth-submit {
+  background-color: #504ef3;
+}
+
 .input-field input[type="text"]:focus + label,
 .input-field input[type="number"]:focus + label,
 .input-field input[type="password"]:focus + label,
 .materialize-textarea:focus:not([readonly]) + label {
-  color: #42a5f5 !important;
+  color: #504ef3 !important;
 }
 
 .input-field input[type="text"]:focus,
 .input-field input[type="number"]:focus,
 .input-field input[type="password"]:focus,
 .materialize-textarea:focus:not([readonly]) {
-  border-bottom: 1px solid #42a5f5 !important;
-  box-shadow: 0 1px 0 0 #42a5f5 !important;
+  border-bottom: 1px solid #504ef3 !important;
+  box-shadow: 0 1px 0 0 #504ef3 !important;
 }
 
 .switch label input[type="checkbox"]:checked + .lever:after {
-  background-color: #0091ea;
+  background-color: #504ef3;
 }
 
 .switch label input[type="checkbox"]:checked + .lever {

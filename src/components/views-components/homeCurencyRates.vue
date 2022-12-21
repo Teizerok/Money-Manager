@@ -38,6 +38,7 @@
 
 <script>
 export default {
+  //функция перевода
   inject: ["t"],
 
   props: {
@@ -50,17 +51,20 @@ export default {
 
   data() {
     return {
+      //валюта к которой остальную будут ковертироваться
       baseCurrency: "USD",
     };
   },
 
   methods: {
+    //нормализация значения для отображения
     normalizePrice(price) {
       return price.toFixed(2);
     },
   },
 
   computed: {
+    //массив курсов
     formatedRates() {
       return Object.entries(this.rates);
     },

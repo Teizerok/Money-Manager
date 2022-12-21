@@ -23,6 +23,7 @@
 export default {
   name: "balanceTable",
 
+  //функция перевода
   inject: ["t"],
 
   props: {
@@ -35,11 +36,13 @@ export default {
 
   data() {
     return {
+      //список всех валют к которым нужно отобразить курс
       currencies: ["USD", "UAH", "EUR"],
     };
   },
 
   methods: {
+    //полученение значения баланса в разных валютах
     getCurrency(currency) {
       return Math.floor(
         this.$store.getters.info.bill /
@@ -48,6 +51,7 @@ export default {
       );
     },
 
+    //формат валюты
     formateCurrency(currency) {
       const currentCurrency = this.getCurrency(currency);
 

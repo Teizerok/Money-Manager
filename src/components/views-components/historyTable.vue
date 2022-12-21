@@ -77,6 +77,8 @@
 <script>
 export default {
   name: "historyTable",
+
+  //функция перевода
   inject: ["t"],
 
   props: {
@@ -92,12 +94,14 @@ export default {
   },
 
   computed: {
+    //формат даты
     dateLanguaged() {
       return this.$store.getters.getLanguage === "ru" ? "ru-RU" : "en-EN";
     },
   },
 
   methods: {
+    //формат валюты
     formateCurrency(value, currency = "UAH") {
       const currentBill = new Intl.NumberFormat("en-EN", {
         style: "currency",
@@ -107,6 +111,7 @@ export default {
       return currentBill;
     },
 
+    //формат даты
     formateDate(date) {
       const options = {
         day: "2-digit",

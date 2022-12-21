@@ -1,7 +1,7 @@
 <template>
   <div class="col s12 m6">
     <div class="create">
-      <div class="page-subtitle">
+      <div class="page-title">
         <h4>
           {{ t("create") }}
         </h4>
@@ -41,7 +41,7 @@
 
           <span v-show="erroredLimit" class="helper-text invalid">
             {{ t("minimum-value") }}
-            {{ minSum }} 
+            {{ minSum }}
           </span>
         </div>
 
@@ -63,6 +63,7 @@ import { required, minValue } from "@vuelidate/validators";
 export default {
   name: "categoryCreate",
 
+  //функция перевода
   inject: ["t"],
 
   emits: {
@@ -80,6 +81,7 @@ export default {
     };
   },
 
+  //валидаторы
   validations() {
     return {
       title: { required },
@@ -87,6 +89,7 @@ export default {
     };
   },
 
+  //поля для валидаторов
   computed: {
     minSum() {
       return this.v$.limit.minValue.$params.min;
@@ -102,11 +105,14 @@ export default {
   },
 
   methods: {
+    //при submit-е формы
     async submitHandler() {
+      //проверка корректности валидаторов
       const isFormCorrect = await this.v$.$validate();
       const currentLanguage = this.$store.getters.getLanguage;
       if (!isFormCorrect) return;
 
+      //подготовка данных для создания новой категории
       const sendDataCategory = {
         title: this.title,
         limit: this.limit,
@@ -115,16 +121,19 @@ export default {
       try {
         await this.$store.dispatch("createCategory", sendDataCategory);
 
+        //очиска данных
         this.limit = 0;
         this.title = "";
         this.v$.$reset();
 
+        //уведомление об успешном создании
         this.$emit("updated");
         M.toast({ html: messages[currentLanguage]["category-added"] });
       } catch (e) {}
     },
   },
 
+  //обновление полей формы
   mounted() {
     M.updateTextFields();
   },
@@ -145,8 +154,9 @@ export default {
   align-items: center;
 }
 
-.page-subtitle {
+.page-title {
   height: 40px;
+  margin: 0 0 20px 0;
 }
 
 .select-option {

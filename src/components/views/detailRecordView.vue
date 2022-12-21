@@ -56,6 +56,7 @@ export default {
     preLoader,
   },
 
+  //функция перевода
   inject: ["t"],
 
   data() {
@@ -72,6 +73,7 @@ export default {
   },
 
   methods: {
+    //преобразование значения в более подходящий вид
     formateCurrency(value, currency = "UAH") {
       const currentBill = new Intl.NumberFormat("en-EN", {
         style: "currency",
@@ -81,6 +83,7 @@ export default {
       return currentBill;
     },
 
+    //преобразование даты
     formateDate(date) {
       const options = {
         day: "2-digit",
@@ -97,6 +100,7 @@ export default {
     },
   },
 
+  //подготовка отображаемой записи
   async created() {
     const record = await this.$store.dispatch(
       "getRecordByKey",

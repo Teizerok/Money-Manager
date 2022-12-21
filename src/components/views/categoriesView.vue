@@ -41,6 +41,7 @@ export default {
     preLoader,
   },
 
+  //функция перевода
   inject: ["t"],
 
   data() {
@@ -51,6 +52,7 @@ export default {
   },
 
   methods: {
+    //загрузка всех категорий
     loadCategories() {
       this.loading = true;
       this.$store.dispatch("getCategories").then((loadedCategories) => {

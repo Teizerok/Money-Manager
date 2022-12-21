@@ -1,7 +1,7 @@
 <template>
   <div class="col s12 m6">
     <div class="edit">
-      <div class="page-subtitle">
+      <div class="page-title">
         <h4>
           {{ t("edit") }}
         </h4>
@@ -92,6 +92,7 @@ import CategoryDeletePopup from "./CategoryDeletePopup.vue";
 export default {
   name: "categoryEdit",
 
+  //функция перевода
   inject: ["t"],
 
   components: {
@@ -124,6 +125,7 @@ export default {
     };
   },
 
+  //валидаторы
   validations() {
     return {
       title: { required },
@@ -131,6 +133,7 @@ export default {
     };
   },
 
+  //поля для валидаторов
   computed: {
     minSum() {
       return this.v$.limit.minValue.$params.min;
@@ -146,10 +149,13 @@ export default {
   },
 
   methods: {
+    //при submit-е формы
     async submitHandler() {
+      //проверка корректности валидаторов
       const isFormCorrect = await this.v$.$validate();
       if (!isFormCorrect) return;
 
+      //подготовка данных для изменения формы
       const dataCategory = {
         title: this.title,
         limit: this.limit,
@@ -161,12 +167,16 @@ export default {
 
         const currentLanguage = this.$store.getters.getLanguage;
 
+        //уведомление об успешном обновлении
         this.$emit("updated");
         M.toast({ html: messages[currentLanguage]["category-updated"] });
       } catch (e) {}
     },
 
+    //при удалении категории
     async deleteHandler() {
+      //открытие попапа, попапа вернет промис который будет в будующем зарезолвен с true or false
+      //если true то мы удалим категории, иначе мы ничего делать не будем
       const isDelete = await this.$refs.popup.open();
 
       if (!isDelete) return;
@@ -176,6 +186,7 @@ export default {
 
         const currentLanguage = this.$store.getters.getLanguage;
 
+        //уведомление об успешном удалении
         this.$emit("deleted");
         M.toast({ html: messages[currentLanguage]["category-deleted"] });
       } catch (e) {}
@@ -183,6 +194,7 @@ export default {
   },
 
   watch: {
+    //при изменении категории мы обновляем поля формы
     currentCategory() {
       const mainCategory = this.categories.find(
         (category) => category.key === this.currentCategory
@@ -196,6 +208,7 @@ export default {
     },
   },
 
+  //назначение начальных полей формы
   created() {
     const mainCategory = this.categories[0];
     this.currentCategory = mainCategory.key;
@@ -203,11 +216,13 @@ export default {
     this.limit = mainCategory.limit;
   },
 
+  //обновление формыи иницилизация выпадающего списка
   mounted() {
     M.updateTextFields();
     this.formSelect = M.FormSelect.init(this.$refs.select);
   },
 
+  //удаление выпадающего списка
   beforeUnmount() {
     if (this.formSelect.destroy) {
       this.formSelect.destroy();
@@ -231,8 +246,9 @@ export default {
   align-items: center;
 }
 
-.page-subtitle {
+.page-title {
   height: 40px;
+  margin: 0 0 20px 0;
 }
 
 .send-button {

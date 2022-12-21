@@ -88,17 +88,20 @@ export default {
   setup() {
     return { v$: useVuelidate() };
   },
-
+  //функция перевода
   inject: ["t"],
 
   data() {
     return {
+      //поля формы
       formCurrencies: null,
       formLanguages: null,
 
       name: null,
 
+      //объект всех отображаемых валют
       currencies: ["USD", "UAH", "EUR"],
+      //объект всех отображаемых языков
       languages: [
         { lang: "en", title: "english", img: english },
         { lang: "ua", title: "ukrainien", img: ukraine },
@@ -109,11 +112,13 @@ export default {
         { lang: "it", title: "italia", img: italia },
       ],
 
+      //поля значения формы
       currentCurrency: null,
       currentLanguage: null,
     };
   },
 
+  //валидаторы
   validations() {
     return {
       name: { required },
@@ -127,36 +132,45 @@ export default {
   },
 
   methods: {
+    //при submit-е формы
     async submitHandler() {
+      //проверка корректности валидаторов
       const isFormCorrect = await this.v$.$validate();
       if (!isFormCorrect) return;
 
+      //подготовка данных для обновления
       const updateToData = {
         name: this.name,
         language: this.$store.getters.getLanguage,
         currentCurrency: this.currentCurrency,
       };
 
+      //обновление данных профиля и оповещение пользователя об его успехе
       try {
+        await this.$store.dispatch("updateInfo", updateToData);
+
         const currentLanguage = this.$store.getters.getLanguage;
         M.toast({ html: messages[currentLanguage]["profile-updatated"] });
-        await this.$store.dispatch("updateInfo", updateToData);
       } catch (e) {}
     },
   },
 
   watch: {
+    //при изменении языка он будет обновлять стейт
     currentLanguage() {
       this.$store.commit("setLanguage", this.currentLanguage);
     },
   },
 
   created() {
+    //имя
     this.name = this.$store.getters.info.name;
 
+    //выбраная валюта и язык
     this.currentCurrency = this.$store.getters.info.currentCurrency;
     this.currentLanguage = this.$store.getters.getLanguage;
 
+    //обновление полей формы
     this.$nextTick().then(() => {
       M.updateTextFields();
       this.formCurrencies = M.FormSelect.init(this.$refs.currencies);

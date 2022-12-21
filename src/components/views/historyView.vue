@@ -52,6 +52,7 @@ import { Pie } from "vue-chartjs";
 export default {
   name: "history",
 
+  //подключение графика
   mixins: [Pie],
 
   components: {
@@ -60,6 +61,7 @@ export default {
     Paginate,
   },
 
+  //функция перевода
   inject: ["t"],
 
   data() {
@@ -72,36 +74,45 @@ export default {
   },
 
   computed: {
+    //разворот массива для отображения для того что бы новые записи были сверху и дробление массива на кнопок для пагинатора
     paginatedPage() {
       const start = (this.page - 1) * this.pageSize;
       const end = this.page * this.pageSize;
       return [...this.records].reverse().slice(start, end);
     },
 
+    //подсчет страниц
     countedPages() {
       return this.records.length / this.pageSize;
     },
   },
 
   methods: {
+    //удаление записи
     async deleteRecord(record) {
       this.loading = true;
       await this.$store.dispatch("deleteRecord", record);
 
+      //обновление всех установочных данных этой страницы
       this.setting();
 
       this.loading = false;
     },
 
+    //преобразование записи для дальнейшего отображения
     normalizeRecord(categories, records) {
+      //проверка на наличие
       if (!categories.length || !records.length) return;
 
       this.records = records.map((record) => {
+        //индефикатор категории
         const categoryName = categories.find(
           (category) => category.key === record.category
         ).title;
 
+        //тип записи
         const typeText = record.type === "outcome" ? "outcome" : "income";
+        //класс css
         const spendedClass = record.type === "outcome" ? true : false;
 
         return {
@@ -112,9 +123,12 @@ export default {
         };
       });
     },
+
+    //метод рендера графика
     async renderGraph(categories) {
       if (!categories.length) return;
 
+      //оплучение курсов всех валют к выбранной в.
       const rates = await loadRatesFor(
         this.$store.getters.info.currentCurrency
       );
@@ -123,11 +137,14 @@ export default {
         labels: categories.map((category) => category.title),
         datasets: [
           {
+            //заголовок графика
             label: "Траты по категориям",
 
+            //данные
             data: categories.map((category) => {
               return this.records.reduce((total, rec) => {
                 if (rec.category === category.key && rec.type === "outcome") {
+                  //конвертация значениязаписи под выбраную валюту
                   let transaction = rec.amount / (rates[rec.currency] || 1);
                   transaction = transaction.toFixed(2);
 

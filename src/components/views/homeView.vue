@@ -37,6 +37,7 @@ export default {
     homeCurencyRates,
   },
 
+  //функция перевода
   inject: ["t"],
 
   data() {
@@ -47,6 +48,7 @@ export default {
   },
 
   methods: {
+    //перезагрузка курсов валют к доллару
     refresh() {
       this.loading = true;
 

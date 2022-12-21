@@ -56,6 +56,7 @@ export default {
     preLoader,
   },
 
+  //функция перевода
   inject: ["t"],
 
   data() {
@@ -66,6 +67,7 @@ export default {
   },
 
   computed: {
+    //форматирования значения вид валюты
     formatedCurrency() {
       const currentCurrency = this.$store.getters.info.currentCurrency;
 
@@ -80,6 +82,7 @@ export default {
     },
   },
 
+  //преобразование значения для отображения
   methods: {
     correctAmount(amount) {
       return amount.toFixed(2);
@@ -87,36 +90,45 @@ export default {
   },
 
   async created() {
+    //получение актуальных курсов валют к выбраной в.
     const rates = await loadRatesFor(this.$store.getters.info.currentCurrency);
 
+    //получение категорий и записей
     const categories = await this.$store.dispatch("getCategories");
     const records = await this.$store.dispatch("getRecords");
 
+    //проверка на наличие
     if (!categories.length || !records.length) {
       this.categories = [];
       this.loading = false;
       return;
     }
 
+    //преобразование категорий
     this.categories = categories.map((category) => {
+      //нахождение записей трат записаных в итерируемую категорию
       const currentRecords = records
         .filter((record) => record.category === category.key)
         .filter((record) => record.type === "outcome");
 
+      //подчсет всех записей итеририруемой категории с конвертацией валюты к выбраной в.
       const spend = currentRecords.reduce((total, record) => {
         let transaction = record.amount / (rates[record.currency] || 1);
 
         return total + +transaction;
       }, 0);
 
+      //получение процентов progressbar
       const procent = (100 * spend) / category.limit;
       const progress = procent > 100 ? 100 : procent;
       let progressColor;
 
+      //цвет
       if (procent < 60) progressColor = "green";
       else if (procent < 100) progressColor = "yellow";
       else progressColor = "red";
 
+      //настроеная категория
       return {
         ...category,
         spend,

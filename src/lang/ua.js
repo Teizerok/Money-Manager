@@ -42,7 +42,7 @@ export default {
 	"enter-category-name": "Введіть назву категорії",
 	"limit": "Ліміт",
 	"edit": "Редагувати",
-	"home-bookkeeping": "Домашня бухгалтерія",
+	"home-bookkeeping": "Облік фінансів",
 	"enter-your-email": "Введіть свою електронну пошту коректно",
 	"email": "Email",
 	"password": "Пароль",

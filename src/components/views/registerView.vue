@@ -95,10 +95,7 @@
 
     <div class="card-action grey lighten-5">
       <div>
-        <button
-          class="btn waves-effect blue lighten-1 auth-submit"
-          type="submit"
-        >
+        <button class="btn waves-effect auth-submit" type="submit">
           {{ t("register") }}
           <i class="material-icons right">send</i>
         </button>
@@ -141,6 +138,7 @@ export default {
     preLoader,
   },
 
+  //функция перевода
   inject: ["t"],
 
   data() {
@@ -155,6 +153,7 @@ export default {
     };
   },
 
+  //валидаторы
   validations() {
     return {
       email: { required, email },
@@ -165,6 +164,7 @@ export default {
     };
   },
 
+  //поля для валидаторов
   computed: {
     minLength() {
       return this.v$.password.minLength.$params.min;
@@ -188,10 +188,13 @@ export default {
   },
 
   methods: {
+    //при submit-е формы
     async submitHandler() {
+      //проверка корректности валидаторов
       const isFormCorrect = await this.v$.$validate();
       if (!isFormCorrect) return;
 
+      //подготовка данных для создания нового аккаунта
       const formSend = {
         email: this.email,
         password: this.password,
@@ -208,12 +211,14 @@ export default {
     },
   },
 
+  //при изменении языка он будет обновлять стейт
   watch: {
     isEnglish() {
       const currentLanguage = this.isEnglish === true ? "en" : "ru";
       this.$store.commit("setLanguage", currentLanguage);
     },
 
+    //обновление полей формы
     loading() {
       this.$nextTick().then(() => {
         M.updateTextFields();
@@ -222,38 +227,54 @@ export default {
   },
 
   created() {
-    this.isEnglish = this.$store.getters.getLanguage === "en" ? true : false;
+    const currentLanguage = this.$store.getters.getLanguage;
+
+    if (!currentLanguage) {
+      this.$store.commit("setLanguage", "en");
+      this.isEnglish = true;
+      return;
+    }
+
+    if (currentLanguage !== "en") {
+      this.isEnglish = false;
+      return;
+    }
+    this.isEnglish = true;
   },
 };
 </script>
 
 <style scoped>
+.auth-submit {
+  background-color: #504ef3;
+}
+
 .input-field input[type="text"]:focus + label,
 .input-field input[type="number"]:focus + label,
 .input-field input[type="password"]:focus + label,
 .materialize-textarea:focus:not([readonly]) + label {
-  color: #42a5f5 !important;
+  color: #504ef3 !important;
 }
 
 .input-field input[type="text"]:focus,
 .input-field input[type="number"]:focus,
 .input-field input[type="password"]:focus,
 .materialize-textarea:focus:not([readonly]) {
-  border-bottom: 1px solid #42a5f5 !important;
-  box-shadow: 0 1px 0 0 #42a5f5 !important;
+  border-bottom: 1px solid #504ef3 !important;
+  box-shadow: 0 1px 0 0 #504ef3 !important;
 }
 
 .input-field input[type="checkbox"]:checked + span:not(.lever):after {
-  border: 2px solid #42a5f5;
-  background-color: #42a5f5;
+  border: 2px solid #504ef3;
+  background-color: #504ef3;
 }
 
 [type="checkbox"].filled-in:checked + span:not(.lever):after {
-  background-color: #42a5f5;
+  background-color: #504ef3;
 }
 
 .switch label input[type="checkbox"]:checked + .lever:after {
-  background-color: #0091ea;
+  background-color: #504ef3;
 }
 
 .switch label input[type="checkbox"]:checked + .lever {

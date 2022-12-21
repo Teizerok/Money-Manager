@@ -18,6 +18,7 @@
 </template>
 
 <script>
+//прелоадер
 export default {
   name: "preLoader",
 
